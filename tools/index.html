@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Tools | GlennBeeckman.dev</title>
+  <meta name="description" content="Small developer tools: Base64, URL encoding, and JSON formatting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a class="brand" href="../index.html">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="index.html" aria-current="page">Tools</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../index.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Utilities</p>
+      <h1>Small tools that remove friction</h1>
+      <p class="lead">Each tool lives in its own folder so it is easier to maintain and extend.</p>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Tools</h2>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <h3>Base64 encode / decode</h3>
+          <p>Convert plain text to Base64 and decode Base64 back to text.</p>
+          <a href="base64/index.html">Open tool</a>
+        </article>
+        <article class="feature-card">
+          <h3>URL encode / decode</h3>
+          <p>Escape URL-safe values and decode query-string fragments.</p>
+          <a href="url/index.html">Open tool</a>
+        </article>
+        <article class="feature-card">
+          <h3>JSON format / minify</h3>
+          <p>Pretty print JSON for readability or minify it for compact output.</p>
+          <a href="json/index.html">Open tool</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>How this is organized</h2>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <h3>Per-tool folders</h3>
+          <p>Each utility has its own page under tools/base64, tools/url, and tools/json.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Independent updates</h3>
+          <p>You can update one tool without touching the others or the tools landing page.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Easy scaling</h3>
+          <p>Add a new folder for every new utility and link it from this card grid.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Need another utility? Create a new subfolder under tools and add one card here.</p>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -129,11 +129,32 @@
     snail.innerHTML = '<span class="snail-body" aria-hidden="true">🐌</span>';
     document.body.appendChild(snail);
 
+    // Start snail at random off-screen position
+    const edge = Math.random();
+    let startX, startY;
+    if (edge < 0.25) {
+      // Top edge
+      startX = Math.random() * window.innerWidth;
+      startY = -50;
+    } else if (edge < 0.5) {
+      // Bottom edge
+      startX = Math.random() * window.innerWidth;
+      startY = window.innerHeight + 50;
+    } else if (edge < 0.75) {
+      // Left edge
+      startX = -50;
+      startY = Math.random() * window.innerHeight;
+    } else {
+      // Right edge
+      startX = window.innerWidth + 50;
+      startY = Math.random() * window.innerHeight;
+    }
+
     const state = {
       mouseX: window.innerWidth * 0.5,
       mouseY: window.innerHeight * 0.5,
-      x: window.innerWidth * 0.5,
-      y: window.innerHeight * 0.5,
+      x: startX,
+      y: startY,
       velocityX: 0,
       velocityY: 0,
       nextCrumbAt: 0

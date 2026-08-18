@@ -113,9 +113,7 @@
 
       @keyframes snail-munch {
         0% { transform: scale(1, 1) rotate(0deg); }
-        25% { transform: scale(1.15, 0.85) rotate(-6deg); }
-        50% { transform: scale(0.95, 1.1) rotate(4deg); }
-        75% { transform: scale(1.15, 0.85) rotate(-6deg); }
+        50% { transform: scale(1.08, 0.92) rotate(-4deg); }
         100% { transform: scale(1, 1) rotate(0deg); }
       }
 

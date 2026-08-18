@@ -113,7 +113,9 @@
 
       @keyframes snail-munch {
         0% { transform: scale(1, 1) rotate(0deg); }
-        50% { transform: scale(1.08, 0.92) rotate(-4deg); }
+        25% { transform: scale(1.15, 0.85) rotate(-6deg); }
+        50% { transform: scale(0.95, 1.1) rotate(4deg); }
+        75% { transform: scale(1.15, 0.85) rotate(-6deg); }
         100% { transform: scale(1, 1) rotate(0deg); }
       }
 
@@ -154,9 +156,9 @@
     }
 
     function tick(now) {
-      const pull = 0.0008;
-      const damping = 0.94;
-      const maxSpeed = 0.4;
+      const pull = 0.0003;
+      const damping = 0.96;
+      const maxSpeed = 0.15;
 
       const dx = state.mouseX - state.x;
       const dy = state.mouseY - state.y;

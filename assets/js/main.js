@@ -205,9 +205,6 @@
       if (isEating && now >= state.nextCrumbAt) {
         emitCrumb(state.mouseX - 2, state.mouseY - 2);
         state.nextCrumbAt = now + 130;
-        
-        // Try to eat a letter from nearby text
-        eatNearbyLetter();
       }
 
       requestAnimationFrame(tick);
@@ -215,77 +212,6 @@
 
     // Track eaten letters
     const eatenLetters = new Map();
-
-    function eatNearbyLetter() {
-      // Find edible elements (titles, headings, paragraphs - but not inputs)
-      const editableSelectors = "h1, h2, h3, h4, h5, p, .hero, .panel:not(input):not(textarea)";
-      const elements = document.querySelectorAll(editableSelectors);
-      
-      let closest = null;
-      let closestDist = 120;
-      let closestElement = null;
-      
-      elements.forEach(el => {
-        if (el.querySelector("input") || el.querySelector("textarea")) return;
-        
-        const rect = el.getBoundingClientRect();
-        const elX = rect.left + rect.width / 2;
-        const elY = rect.top + rect.height / 2;
-        const dist = Math.hypot(state.x - elX, state.y - elY);
-        
-        if (dist < closestDist && el.textContent.length > 0) {
-          closestDist = dist;
-          closest = el;
-          closestElement = el;
-        }
-      });
-      
-      if (!closest) return;
-      
-      // Get all text nodes
-      const textNodes = [];
-      const walker = document.createTreeWalker(
-        closest,
-        NodeFilter.SHOW_TEXT,
-        null
-      );
-      let node;
-      while (node = walker.nextNode()) {
-        if (node.textContent.trim().length > 0) {
-          textNodes.push(node);
-        }
-      }
-      
-      if (textNodes.length === 0) return;
-      
-      // Pick random text node and random character
-      const textNode = textNodes[Math.floor(Math.random() * textNodes.length)];
-      const text = textNode.textContent;
-      const charIndex = Math.floor(Math.random() * text.length);
-      
-      if (text[charIndex] === ' ') return; // Don't eat spaces
-      
-      const key = textNode.textContent + "|" + charIndex + "|" + Math.random();
-      
-      // Store original and hide letter
-      if (!eatenLetters.has(key)) {
-        eatenLetters.set(key, {
-          node: textNode,
-          index: charIndex,
-          originalText: text
-        });
-        
-        const hiddenText = text.substring(0, charIndex) + ' ' + text.substring(charIndex + 1);
-        textNode.textContent = hiddenText;
-        
-        // Restore after 2 seconds
-        setTimeout(() => {
-          textNode.textContent = text;
-          eatenLetters.delete(key);
-        }, 2000);
-      }
-    }
-    }
 
     requestAnimationFrame(tick);
   }

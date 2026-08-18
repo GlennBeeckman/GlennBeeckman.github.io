@@ -104,16 +104,16 @@
       }
 
       @keyframes robot-walk {
-        0% { transform: translateY(0px) scaleY(1); }
-        25% { transform: translateY(-2px) scaleY(0.95); }
-        50% { transform: translateY(0px) scaleY(1); }
-        75% { transform: translateY(-2px) scaleY(0.95); }
-        100% { transform: translateY(0px) scaleY(1); }
+        0% { transform: scaleX(1) rotateZ(0deg); }
+        25% { transform: scaleX(1) rotateZ(-2deg); }
+        50% { transform: scaleX(1) rotateZ(0deg); }
+        75% { transform: scaleX(1) rotateZ(2deg); }
+        100% { transform: scaleX(1) rotateZ(0deg); }
       }
 
       @keyframes robot-sit {
-        0% { transform: translateY(0px) scaleY(1); }
-        100% { transform: translateY(2px) scaleY(0.85); }
+        0% { transform: scaleX(1) rotateZ(0deg); }
+        100% { transform: scaleX(0.95) rotateZ(0deg); }
       }
     `;
     document.head.appendChild(style);

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Fx Reference | GlennBeeckman.dev</title>
+  <meta name="description" content="Complete searchable Power Fx function reference with syntax and examples.">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .ref-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 1000px) { .ref-container { grid-template-columns: 1fr; } }
+    .search-box { width: 100%; padding: 1rem; border: 2px solid var(--line); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; }
+    .search-box:focus { outline: none; border-color: var(--accent); }
+    .func-list { max-height: 600px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; }
+    .func-item { padding: 1rem; border-bottom: 1px solid var(--line); cursor: pointer; transition: background 0.2s; }
+    .func-item:hover { background: rgba(0, 82, 204, 0.05); border-left: 3px solid var(--accent); padding-left: calc(1rem - 3px); }
+    .func-item.active { background: rgba(0, 82, 204, 0.1); border-left: 3px solid var(--accent); padding-left: calc(1rem - 3px); }
+    .func-name { font-weight: 700; color: var(--accent); font-family: "Fira Code", monospace; }
+    .func-category { font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; margin-top: 0.25rem; }
+    .detail-panel { border: 1px solid var(--line); border-radius: 8px; padding: 1.5rem; max-height: 600px; overflow-y: auto; }
+    .detail-empty { text-align: center; color: var(--text-light); padding: 2rem; }
+    .detail-header { margin-bottom: 1.5rem; }
+    .detail-title { font-size: 1.3rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; }
+    .detail-syntax { background: #f0f4f9; border-left: 3px solid var(--accent); padding: 1rem; border-radius: 6px; font-family: "Fira Code", monospace; font-size: 0.9rem; margin-bottom: 1rem; overflow-x: auto; }
+    .detail-section { margin-bottom: 1.5rem; }
+    .detail-section-title { font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; }
+    .detail-text { color: var(--text-light); line-height: 1.6; }
+    .param-list { background: rgba(0, 82, 204, 0.02); border: 1px solid var(--line); border-radius: 6px; padding: 1rem; }
+    .param-item { margin-bottom: 0.75rem; }
+    .param-item:last-child { margin-bottom: 0; }
+    .param-name { font-family: "Fira Code", monospace; font-weight: 600; color: var(--accent); }
+    .param-desc { color: var(--text-light); font-size: 0.95rem; }
+    .category-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .category-btn { padding: 0.5rem 1rem; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .category-btn:hover, .category-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../../tools/index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Developer Reference</p>
+      <h1>Power Fx Function Reference</h1>
+      <p class="lead">Complete searchable reference of all Power Fx functions with syntax, parameters, and examples.</p>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Browse Functions</h2>
+      
+      <div class="category-filter" id="category-filter"></div>
+
+      <div class="ref-container">
+        <!-- Left: Function List -->
+        <div>
+          <input type="search" id="search-input" class="search-box" placeholder="Search functions...">
+          <div class="func-list" id="func-list"></div>
+        </div>
+
+        <!-- Right: Function Details -->
+        <div>
+          <div class="detail-panel" id="detail-panel">
+            <div class="detail-empty">Select a function to see details</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Power Fx function reference for Canvas Apps, model-driven apps, and cloud flows.</p>
+    <p><a href="../../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="tool.js"></script>
+</body>
+</html>

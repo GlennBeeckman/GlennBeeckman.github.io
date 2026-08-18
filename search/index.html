@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search | GlennBeeckman.dev</title>
+  <meta name="description" content="Search tools, snippets, utilities, and blog posts on GlennBeeckman.dev">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    .search-hero { padding: 3rem 0 1rem; }
+    .search-bar-wrap { position: relative; margin: 2rem 0; }
+    .search-bar { width: 100%; padding: 1rem 1.25rem 1rem 3rem; font-size: 1.1rem; border: 2px solid var(--line); border-radius: 8px; font-family: "Space Grotesk", sans-serif; background: var(--card); color: var(--ink); box-sizing: border-box; transition: border-color .15s; }
+    .search-bar:focus { outline: none; border-color: var(--accent); }
+    .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #999; font-size: 1.1rem; pointer-events: none; }
+    .search-meta { font-size: .9rem; color: #666; margin-bottom: 1.5rem; min-height: 1.4rem; }
+    .results-list { display: grid; gap: 1rem; }
+    .result-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow); text-decoration: none; color: inherit; display: block; transition: all .15s; }
+    .result-card:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 12px 30px rgba(0,102,204,.12); }
+    .result-section { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent-strong); margin-bottom: .3rem; background: rgba(0,102,204,.08); display: inline-block; padding: .15rem .5rem; border-radius: 4px; }
+    .result-title { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin: .35rem 0 .4rem; }
+    .result-desc { font-size: .9rem; color: #555; margin: 0; line-height: 1.5; }
+    .result-url { font-size: .8rem; color: #999; margin-top: .4rem; font-family: "IBM Plex Mono", monospace; }
+    .no-results { text-align: center; padding: 4rem 2rem; color: #666; }
+    .no-results h2 { font-size: 1.25rem; margin-bottom: .5rem; }
+    .empty-state { text-align: center; padding: 4rem 2rem; color: #888; }
+    mark { background: rgba(0,102,204,.15); color: var(--ink); border-radius: 2px; padding: 0 .15rem; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../tools/index.html">Tools</a>
+      <a href="../snippets/index.html">Snippets</a>
+      <a href="../resources/index.html">Resources</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../search/index.html" aria-current="page">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="search-hero">
+      <p class="kicker">Search</p>
+      <h1>Find anything on the site</h1>
+    </section>
+
+    <div class="search-bar-wrap">
+      <span class="search-icon">&#x1F50D;</span>
+      <input class="search-bar" id="search-input" type="search" placeholder="Search tools, snippets, utilities, blog posts…" autofocus autocomplete="off">
+    </div>
+
+    <p class="search-meta" id="search-meta"></p>
+    <div id="results-container">
+      <div class="empty-state">
+        <p>Start typing to search across all tools, snippets, and resources.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Built with plain HTML, CSS, and JavaScript for fast GitHub Pages hosting.</p>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+  <script>
+    let fuse = null;
+    let index = [];
+
+    async function loadIndex() {
+      try {
+        const res = await fetch('search-index.json');
+        index = await res.json();
+        fuse = new Fuse(index, {
+          keys: [
+            { name: 'title', weight: 0.5 },
+            { name: 'description', weight: 0.3 },
+            { name: 'keywords', weight: 0.2 }
+          ],
+          threshold: 0.35,
+          includeScore: true,
+          includeMatches: true,
+          minMatchCharLength: 2
+        });
+
+        // If ?q= param in URL, auto-search
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q');
+        if (q) {
+          document.getElementById('search-input').value = q;
+          doSearch(q);
+        }
+      } catch (e) {
+        console.warn('Search index not loaded:', e);
+      }
+    }
+
+    function doSearch(query) {
+      const meta = document.getElementById('search-meta');
+      const container = document.getElementById('results-container');
+
+      if (!query.trim()) {
+        meta.textContent = '';
+        container.innerHTML = '<div class="empty-state"><p>Start typing to search across all tools, snippets, and resources.</p></div>';
+        return;
+      }
+
+      if (!fuse) {
+        meta.textContent = 'Search index loading…';
+        return;
+      }
+
+      const results = fuse.search(query);
+      meta.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '') + ' for "' + query + '"';
+
+      if (results.length === 0) {
+        container.innerHTML =
+          '<div class="no-results">' +
+          '<h2>No results for "' + escapeHtml(query) + '"</h2>' +
+          '<p>Try different keywords, or <a href="../snippets/index.html">browse snippets</a> and <a href="../tools/index.html">tools</a> directly.</p>' +
+          '</div>';
+        return;
+      }
+
+      container.innerHTML = '<div class="results-list">' + results.map(r => {
+        const item = r.item;
+        const url = item.url;
+        return (
+          '<a class="result-card" href="..' + url + '">' +
+          '<span class="result-section">' + item.section + '</span>' +
+          '<div class="result-title">' + highlight(item.title, query) + '</div>' +
+          '<p class="result-desc">' + highlight(item.description, query) + '</p>' +
+          '<div class="result-url">glennbeeckman.dev' + url + '</div>' +
+          '</a>'
+        );
+      }).join('') + '</div>';
+
+      // Update URL without reloading
+      const newUrl = window.location.pathname + '?q=' + encodeURIComponent(query);
+      window.history.replaceState(null, '', newUrl);
+    }
+
+    function highlight(text, query) {
+      const words = query.trim().split(/\s+/).filter(Boolean);
+      let result = escapeHtml(text);
+      words.forEach(w => {
+        const re = new RegExp('(' + escapeRegex(w) + ')', 'gi');
+        result = result.replace(re, '<mark>$1</mark>');
+      });
+      return result;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    document.getElementById('search-input').addEventListener('input', e => doSearch(e.target.value));
+
+    loadIndex();
+  </script>
+</body>
+</html>

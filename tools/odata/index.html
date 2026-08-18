@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OData Query Builder | GlennBeeckman.dev</title>
+  <meta name="description" content="Visual OData query builder for Microsoft Dataverse. Build $select, $filter, $orderby, $expand and $top queries visually.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .tool-card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:2rem; box-shadow:var(--shadow); margin-bottom:1.5rem; }
+    .tool-card h2 { margin-top:0; font-size:1.15rem; color:var(--ink); }
+    .tool-label { display:block; font-weight:600; font-size:.9rem; margin-bottom:.4rem; color:var(--ink); }
+    .tool-input, .tool-select { width:100%; padding:.65rem .9rem; border:1px solid var(--line); border-radius:6px; font-family:"Space Grotesk",sans-serif; font-size:.9rem; background:var(--card); color:var(--ink); box-sizing:border-box; }
+    .tool-input:focus, .tool-select:focus { outline:none; border-color:var(--accent); }
+    .row { display:grid; gap:.75rem; margin-bottom:.75rem; }
+    .row-3 { grid-template-columns:1fr 1fr 1fr; }
+    .row-2 { grid-template-columns:1fr 1fr; }
+    .row-4 { grid-template-columns:1fr 1fr 1fr auto; }
+    @media(max-width:700px){ .row-3,.row-2,.row-4 { grid-template-columns:1fr; } }
+    .btn { padding:.55rem 1.2rem; border-radius:6px; border:none; font-family:"Space Grotesk",sans-serif; font-size:.9rem; font-weight:600; cursor:pointer; transition:background .15s; }
+    .btn-primary { background:var(--accent); color:#fff; }
+    .btn-primary:hover { background:var(--accent-strong); }
+    .btn-secondary { background:#f0f4f9; color:var(--ink); border:1px solid var(--line); }
+    .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+    .btn-danger { background:#fee2e2; color:#9b1c1c; border:1px solid #fecaca; }
+    .btn-danger:hover { background:#fecaca; }
+    .btn-sm { padding:.3rem .7rem; font-size:.8rem; }
+    .filter-row { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:.5rem; align-items:center; margin-bottom:.5rem; }
+    @media(max-width:700px){ .filter-row { grid-template-columns:1fr; } }
+    .add-btn { display:inline-flex; align-items:center; gap:.4rem; background:transparent; color:var(--accent); border:1px dashed var(--accent); border-radius:6px; padding:.45rem 1rem; font-family:"Space Grotesk",sans-serif; font-size:.85rem; font-weight:600; cursor:pointer; margin-top:.5rem; transition:all .15s; }
+    .add-btn:hover { background:rgba(0,102,204,.06); }
+    .output-box { background:#0f1720; color:#a8d8a8; padding:1.5rem; border-radius:8px; font-family:"IBM Plex Mono",monospace; font-size:.88rem; line-height:1.7; word-break:break-all; min-height:80px; white-space:pre-wrap; }
+    .output-actions { display:flex; gap:.75rem; margin-top:1rem; flex-wrap:wrap; }
+    .copied-badge { color:#15803d; font-size:.85rem; font-weight:600; display:none; }
+    .hint { font-size:.82rem; color:#888; margin:.35rem 0 0; }
+    .section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--accent-strong); margin:0 0 .75rem; }
+    .tag-wrap { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem; }
+    .tag { display:inline-flex; align-items:center; gap:.3rem; background:rgba(0,102,204,.1); color:var(--accent-strong); border-radius:999px; padding:.2rem .65rem; font-size:.8rem; font-weight:500; }
+    .tag button { background:none; border:none; cursor:pointer; font-size:.9rem; color:inherit; padding:0; line-height:1; }
+    .examples { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
+    .example-btn { padding:.3rem .75rem; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:.8rem; font-weight:500; cursor:pointer; font-family:"Space Grotesk",sans-serif; transition:all .15s; }
+    .example-btn:hover { border-color:var(--accent); color:var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="kicker">Tool</p>
+      <h1>OData Query Builder</h1>
+      <p class="subtitle">Build Dataverse OData queries visually. No more memorizing syntax — just fill in the fields and copy the result.</p>
+    </section>
+
+    <!-- Base URL -->
+    <div class="tool-card">
+      <h2>1. Base URL</h2>
+      <label class="tool-label" for="base-url">Dataverse Environment URL</label>
+      <input class="tool-input" id="base-url" type="url" placeholder="https://yourorg.crm.dynamics.com/api/data/v9.2/">
+      <p class="hint">Found in Power Platform Admin Center → Environments → Settings → Developer Resources</p>
+
+      <label class="tool-label" style="margin-top:1rem;" for="entity-name">Entity (table) plural name</label>
+      <input class="tool-input" id="entity-name" type="text" placeholder="contacts, accounts, opportunities…">
+      <p class="hint">Use the plural API name (e.g., <code>contacts</code>, not <code>Contact</code>)</p>
+
+      <div class="examples" style="margin-top:.75rem;">
+        <span style="font-size:.82rem;color:#888;align-self:center;">Common tables:</span>
+        <button class="example-btn" onclick="setEntity('contacts')">contacts</button>
+        <button class="example-btn" onclick="setEntity('accounts')">accounts</button>
+        <button class="example-btn" onclick="setEntity('opportunities')">opportunities</button>
+        <button class="example-btn" onclick="setEntity('systemusers')">systemusers</button>
+        <button class="example-btn" onclick="setEntity('incidents')">incidents (cases)</button>
+      </div>
+    </div>
+
+    <!-- $select -->
+    <div class="tool-card">
+      <h2>2. $select — Columns to Return</h2>
+      <p class="hint" style="margin:0 0 .75rem;">Only return the fields you need. Leave empty to return all (not recommended for performance).</p>
+      <div class="row row-2">
+        <input class="tool-input" id="select-input" type="text" placeholder="Type column name and press Enter or comma" oninput="handleSelectInput(event)" onkeydown="handleSelectKey(event)">
+        <div></div>
+      </div>
+      <div class="tag-wrap" id="select-tags"></div>
+      <div class="examples" style="margin-top:.75rem;">
+        <span style="font-size:.82rem;color:#888;align-self:center;">Common fields:</span>
+        <button class="example-btn" onclick="addSelectTag('fullname')">fullname</button>
+        <button class="example-btn" onclick="addSelectTag('emailaddress1')">emailaddress1</button>
+        <button class="example-btn" onclick="addSelectTag('createdon')">createdon</button>
+        <button class="example-btn" onclick="addSelectTag('modifiedon')">modifiedon</button>
+        <button class="example-btn" onclick="addSelectTag('statecode')">statecode</button>
+        <button class="example-btn" onclick="addSelectTag('name')">name (account)</button>
+      </div>
+    </div>
+
+    <!-- $filter -->
+    <div class="tool-card">
+      <h2>3. $filter — Conditions</h2>
+      <div id="filter-rows"></div>
+      <button class="add-btn" onclick="addFilterRow()">+ Add condition</button>
+      <p class="hint" style="margin-top:.75rem;">Multiple conditions are joined with <strong>and</strong>. You can manually edit the generated query for <code>or</code> logic.</p>
+    </div>
+
+    <!-- $orderby -->
+    <div class="tool-card">
+      <h2>4. $orderby — Sort</h2>
+      <div class="row row-3">
+        <div>
+          <label class="tool-label" for="orderby-field">Sort by field</label>
+          <input class="tool-input" id="orderby-field" type="text" placeholder="createdon, fullname…" oninput="buildQuery()">
+        </div>
+        <div>
+          <label class="tool-label" for="orderby-dir">Direction</label>
+          <select class="tool-select" id="orderby-dir" onchange="buildQuery()">
+            <option value="asc">Ascending (asc)</option>
+            <option value="desc">Descending (desc)</option>
+          </select>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- $top / $skip -->
+    <div class="tool-card">
+      <h2>5. $top and $skip — Pagination</h2>
+      <div class="row row-3">
+        <div>
+          <label class="tool-label" for="top-val">$top (max records)</label>
+          <input class="tool-input" id="top-val" type="number" min="1" max="5000" placeholder="e.g. 50" oninput="buildQuery()">
+          <p class="hint">Max 5000 per request</p>
+        </div>
+        <div>
+          <label class="tool-label" for="skip-val">$skip (offset)</label>
+          <input class="tool-input" id="skip-val" type="number" min="0" placeholder="e.g. 0" oninput="buildQuery()">
+          <p class="hint">Records to skip for paging</p>
+        </div>
+        <div>
+          <label class="tool-label" for="count-val">$count</label>
+          <select class="tool-select" id="count-val" onchange="buildQuery()">
+            <option value="">Don't include count</option>
+            <option value="true">Include record count ($count=true)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- $expand -->
+    <div class="tool-card">
+      <h2>6. $expand — Related Records</h2>
+      <div class="row row-2">
+        <div>
+          <label class="tool-label" for="expand-nav">Navigation property</label>
+          <input class="tool-input" id="expand-nav" type="text" placeholder="primarycontactid, ownerid…" oninput="buildQuery()">
+        </div>
+        <div>
+          <label class="tool-label" for="expand-select">Fields to select (optional)</label>
+          <input class="tool-input" id="expand-select" type="text" placeholder="fullname,emailaddress1" oninput="buildQuery()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="tool-card">
+      <h2>Generated Query</h2>
+      <div class="output-box" id="output">Fill in the fields above to generate your query.</div>
+      <div class="output-actions">
+        <button class="btn btn-primary" onclick="copyQuery()">Copy Query URL</button>
+        <button class="btn btn-secondary" onclick="copyForFlow()">Copy for Power Automate</button>
+        <button class="btn btn-secondary" onclick="resetAll()">Reset All</button>
+        <span class="copied-badge" id="copied-badge">Copied!</span>
+      </div>
+    </div>
+
+    <!-- Quick Examples -->
+    <div class="tool-card">
+      <h2>Quick Examples</h2>
+      <p class="hint" style="margin:0 0 1rem;">Click any example to load it into the builder.</p>
+      <div class="examples">
+        <button class="example-btn" onclick="loadExample('active-contacts')">Active contacts (name + email)</button>
+        <button class="example-btn" onclick="loadExample('recent-accounts')">Accounts created last 30 days</button>
+        <button class="example-btn" onclick="loadExample('open-cases')">Open support cases</button>
+        <button class="example-btn" onclick="loadExample('top50-users')">Top 50 users</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">← Back to tools</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let selectTags = [];
+    let filterRows = [];
+    let filterCounter = 0;
+
+    // ---- Select tags ----
+    function handleSelectKey(e) {
+      if (e.key === "Enter" || e.key === ",") {
+        e.preventDefault();
+        const val = e.target.value.replace(/,/g,"").trim();
+        if (val) { addSelectTag(val); e.target.value = ""; }
+      }
+    }
+    function handleSelectInput(e) {
+      if (e.target.value.endsWith(",")) {
+        const val = e.target.value.replace(/,/g,"").trim();
+        if (val) { addSelectTag(val); e.target.value = ""; }
+      }
+    }
+    function addSelectTag(val) {
+      val = val.trim();
+      if (!val || selectTags.includes(val)) return;
+      selectTags.push(val);
+      renderSelectTags();
+      buildQuery();
+    }
+    function removeSelectTag(val) {
+      selectTags = selectTags.filter(t => t !== val);
+      renderSelectTags();
+      buildQuery();
+    }
+    function renderSelectTags() {
+      document.getElementById("select-tags").innerHTML = selectTags.map(t =>
+        "<span class='tag'>" + t + "<button onclick=\"removeSelectTag('" + t + "')\" title='Remove'>&#x2715;</button></span>"
+      ).join("");
+    }
+
+    // ---- Filter rows ----
+    function addFilterRow() {
+      const id = ++filterCounter;
+      filterRows.push(id);
+      const div = document.createElement("div");
+      div.className = "filter-row";
+      div.id = "filter-" + id;
+      div.innerHTML =
+        "<input class='tool-input' id='ff-" + id + "' placeholder='Field (e.g. statecode)' oninput='buildQuery()'>" +
+        "<select class='tool-select' id='fo-" + id + "' onchange='buildQuery()'>" +
+        "<option value='eq'>eq (equals)</option>" +
+        "<option value='ne'>ne (not equals)</option>" +
+        "<option value='gt'>gt (greater than)</option>" +
+        "<option value='ge'>ge (greater or equal)</option>" +
+        "<option value='lt'>lt (less than)</option>" +
+        "<option value='le'>le (less or equal)</option>" +
+        "<option value='contains'>contains</option>" +
+        "<option value='startswith'>startswith</option>" +
+        "<option value='endswith'>endswith</option>" +
+        "</select>" +
+        "<input class='tool-input' id='fv-" + id + "' placeholder='Value (e.g. 0, &quot;Active&quot;)' oninput='buildQuery()'>" +
+        "<button class='btn btn-danger btn-sm' onclick='removeFilterRow(" + id + ")'>&#x2715;</button>";
+      document.getElementById("filter-rows").appendChild(div);
+      buildQuery();
+    }
+    function removeFilterRow(id) {
+      filterRows = filterRows.filter(r => r !== id);
+      const el = document.getElementById("filter-" + id);
+      if (el) el.remove();
+      buildQuery();
+    }
+
+    function setEntity(name) {
+      document.getElementById("entity-name").value = name;
+      buildQuery();
+    }
+
+    // ---- Build query ----
+    function buildQuery() {
+      const base = (document.getElementById("base-url").value || "https://yourorg.crm.dynamics.com/api/data/v9.2").replace(/\/$/, "");
+      const entity = document.getElementById("entity-name").value.trim();
+      if (!entity) { document.getElementById("output").textContent = "Enter an entity name to generate the query."; return; }
+
+      const params = [];
+
+      if (selectTags.length > 0) params.push("$select=" + selectTags.join(","));
+
+      const filters = filterRows.map(id => {
+        const field = (document.getElementById("ff-" + id) || {}).value || "";
+        const op = (document.getElementById("fo-" + id) || {}).value || "eq";
+        let val = (document.getElementById("fv-" + id) || {}).value || "";
+        if (!field || !val) return null;
+        if (op === "contains" || op === "startswith" || op === "endswith") {
+          return op + "(" + field + ",'" + val + "')";
+        }
+        const isNum = !isNaN(val) && val !== "";
+        return field + " " + op + " " + (isNum ? val : "'" + val + "'");
+      }).filter(Boolean);
+      if (filters.length > 0) params.push("$filter=" + filters.join(" and "));
+
+      const orderField = document.getElementById("orderby-field").value.trim();
+      const orderDir = document.getElementById("orderby-dir").value;
+      if (orderField) params.push("$orderby=" + orderField + " " + orderDir);
+
+      const top = document.getElementById("top-val").value.trim();
+      if (top) params.push("$top=" + top);
+
+      const skip = document.getElementById("skip-val").value.trim();
+      if (skip) params.push("$skip=" + skip);
+
+      const count = document.getElementById("count-val").value;
+      if (count) params.push("$count=" + count);
+
+      const expandNav = document.getElementById("expand-nav").value.trim();
+      const expandSel = document.getElementById("expand-select").value.trim();
+      if (expandNav) {
+        params.push("$expand=" + expandNav + (expandSel ? "($select=" + expandSel + ")" : ""));
+      }
+
+      const query = base + "/" + entity + (params.length ? "?" + params.join("&") : "");
+      document.getElementById("output").textContent = query;
+    }
+
+    function copyQuery() {
+      const text = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(text).then(() => showCopied());
+    }
+
+    function copyForFlow() {
+      const base = (document.getElementById("base-url").value || "https://yourorg.crm.dynamics.com/api/data/v9.2").replace(/\/$/, "");
+      const entity = document.getElementById("entity-name").value.trim();
+      if (!entity) { alert("Enter an entity name first."); return; }
+
+      const params = [];
+      if (selectTags.length > 0) params.push("$select=" + selectTags.join(","));
+      const filters = filterRows.map(id => {
+        const field = (document.getElementById("ff-" + id) || {}).value || "";
+        const op = (document.getElementById("fo-" + id) || {}).value || "eq";
+        let val = (document.getElementById("fv-" + id) || {}).value || "";
+        if (!field || !val) return null;
+        if (op === "contains" || op === "startswith" || op === "endswith") return op + "(" + field + ",'" + val + "')";
+        const isNum = !isNaN(val) && val !== "";
+        return field + " " + op + " " + (isNum ? val : "'" + val + "'");
+      }).filter(Boolean);
+      if (filters.length > 0) params.push("$filter=" + filters.join(" and "));
+      const top = document.getElementById("top-val").value.trim();
+      if (top) params.push("$top=" + top);
+
+      // Power Automate "List rows" format: table name + filter query only
+      const paFormat =
+        "Table name: " + entity + "\n" +
+        (params.length ? "Filter query: " + params.join("&") : "(no filter)");
+
+      navigator.clipboard.writeText(paFormat).then(() => showCopied());
+    }
+
+    function showCopied() {
+      const badge = document.getElementById("copied-badge");
+      badge.style.display = "inline";
+      setTimeout(() => badge.style.display = "none", 2000);
+    }
+
+    function resetAll() {
+      document.getElementById("base-url").value = "";
+      document.getElementById("entity-name").value = "";
+      selectTags = [];
+      renderSelectTags();
+      filterRows.forEach(id => { const el = document.getElementById("filter-" + id); if(el) el.remove(); });
+      filterRows = [];
+      document.getElementById("orderby-field").value = "";
+      document.getElementById("top-val").value = "";
+      document.getElementById("skip-val").value = "";
+      document.getElementById("count-val").value = "";
+      document.getElementById("expand-nav").value = "";
+      document.getElementById("expand-select").value = "";
+      document.getElementById("output").textContent = "Fill in the fields above to generate your query.";
+    }
+
+    function loadExample(name) {
+      resetAll();
+      if (name === "active-contacts") {
+        document.getElementById("entity-name").value = "contacts";
+        addSelectTag("fullname"); addSelectTag("emailaddress1"); addSelectTag("telephone1"); addSelectTag("createdon");
+        addFilterRow();
+        setTimeout(() => {
+          document.getElementById("ff-" + filterCounter).value = "statecode";
+          document.getElementById("fv-" + filterCounter).value = "0";
+          document.getElementById("top-val").value = "50";
+          document.getElementById("orderby-field").value = "fullname";
+          buildQuery();
+        }, 50);
+      } else if (name === "recent-accounts") {
+        document.getElementById("entity-name").value = "accounts";
+        addSelectTag("name"); addSelectTag("emailaddress1"); addSelectTag("createdon"); addSelectTag("revenue");
+        addFilterRow();
+        setTimeout(() => {
+          document.getElementById("ff-" + filterCounter).value = "createdon";
+          document.getElementById("fo-" + filterCounter).value = "ge";
+          document.getElementById("fv-" + filterCounter).value = "2026-05-11T00:00:00Z";
+          document.getElementById("orderby-field").value = "createdon";
+          document.getElementById("orderby-dir").value = "desc";
+          buildQuery();
+        }, 50);
+      } else if (name === "open-cases") {
+        document.getElementById("entity-name").value = "incidents";
+        addSelectTag("title"); addSelectTag("ticketnumber"); addSelectTag("createdon"); addSelectTag("prioritycode");
+        addFilterRow();
+        setTimeout(() => {
+          document.getElementById("ff-" + filterCounter).value = "statecode";
+          document.getElementById("fv-" + filterCounter).value = "0";
+          document.getElementById("top-val").value = "100";
+          document.getElementById("orderby-field").value = "prioritycode";
+          document.getElementById("orderby-dir").value = "asc";
+          buildQuery();
+        }, 50);
+      } else if (name === "top50-users") {
+        document.getElementById("entity-name").value = "systemusers";
+        addSelectTag("fullname"); addSelectTag("internalemailaddress"); addSelectTag("isdisabled");
+        addFilterRow();
+        setTimeout(() => {
+          document.getElementById("ff-" + filterCounter).value = "isdisabled";
+          document.getElementById("fv-" + filterCounter).value = "false";
+          document.getElementById("top-val").value = "50";
+          document.getElementById("orderby-field").value = "fullname";
+          buildQuery();
+        }, 50);
+      }
+    }
+
+    // Init with one filter row
+    addFilterRow();
+
+    // Live updates for base url and entity
+    document.getElementById("base-url").addEventListener("input", buildQuery);
+    document.getElementById("entity-name").addEventListener("input", buildQuery);
+  </script>
+</body>
+</html>

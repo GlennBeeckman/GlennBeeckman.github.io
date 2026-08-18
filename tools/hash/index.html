@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hash Generator Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Generate MD5, SHA1, SHA256 hashes locally.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a class="brand" href="../../index.html">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="../index.html">Tools</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../index.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Tool</p>
+      <h1>Hash Generator</h1>
+      <p class="lead">Generate SHA-256 and other hashes from text (no transmission to servers).</p>
+    </section>
+
+    <section class="panel reveal">
+      <article class="tool-card">
+        <label for="hash-input">Input Text</label>
+        <textarea id="hash-input" placeholder="Enter text to hash"></textarea>
+
+        <label for="hash-type" style="margin-top: 1rem;">Hash Type</label>
+        <select id="hash-type" style="width: 100%; padding: 0.75rem; border: 1px solid var(--line); border-radius: 6px; font-family: inherit;">
+          <option value="sha256">SHA-256</option>
+          <option value="sha1">SHA-1</option>
+          <option value="sha512">SHA-512</option>
+        </select>
+
+        <div class="tool-actions" style="margin-top: 1rem;">
+          <button type="button" id="hash-generate">Generate Hash</button>
+          <button type="button" id="hash-clear" class="ghost">Clear</button>
+        </div>
+
+        <label for="hash-output" style="margin-top: 1rem;">Output</label>
+        <textarea id="hash-output" readonly placeholder="Hash will appear here"></textarea>
+        <button type="button" id="hash-copy" class="ghost">Copy</button>
+
+        <p class="status" id="hash-status" aria-live="polite"></p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">Back to tools</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="./tool.js"></script>
+</body>
+</html>

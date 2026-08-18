@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Code Lookup | GlennBeeckman.dev</title>
+  <meta name="description" content="Search Dataverse and Power Platform error codes with explanations and solutions.">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .tool-section { margin-bottom: 2rem; }
+    .search-box { position: relative; margin-bottom: 1.5rem; }
+    #error-search { width: 100%; padding: 1rem; font-size: 1rem; border: 2px solid var(--line); border-radius: 8px; }
+    .error-results { display: grid; gap: 1rem; }
+    .error-card { border: 1px solid var(--line); border-radius: 8px; padding: 1.5rem; background: var(--card); }
+    .error-card:hover { border-color: var(--accent); box-shadow: 0 8px 24px rgba(0, 82, 204, 0.15); }
+    .error-code { font-family: "Fira Code", monospace; font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+    .error-title { font-size: 1.1rem; font-weight: 600; margin: 0.5rem 0 0; color: var(--ink); }
+    .error-desc { color: var(--text-light); margin: 0.5rem 0; line-height: 1.6; }
+    .error-solution { background: rgba(0, 82, 204, 0.05); padding: 1rem; border-radius: 6px; margin-top: 0.75rem; font-size: 0.95rem; border-left: 3px solid var(--accent); }
+    .error-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .error-tag { font-size: 0.75rem; background: var(--line); color: var(--text-light); padding: 0.25rem 0.6rem; border-radius: 4px; }
+    .no-results { text-align: center; padding: 2rem; color: var(--text-light); }
+    .filter-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-weight: 500; }
+    .filter-btn:hover, .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .result-count { color: var(--text-light); font-size: 0.95rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../../tools/index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Developer Reference</p>
+      <h1>Error Code Lookup</h1>
+      <p class="lead">Search Dataverse and Power Platform error codes. Get explanations and solutions instantly.</p>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Find Error Solutions</h2>
+      
+      <div class="tool-section">
+        <label for="error-search" style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Search by code or keyword:</label>
+        <input 
+          type="search" 
+          id="error-search" 
+          placeholder="e.g., 0x8004B00A, timeout, access denied..." 
+          aria-label="Search error codes"
+        >
+        
+        <div class="filter-buttons" style="margin-top: 1rem;">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="security">Security</button>
+          <button class="filter-btn" data-filter="timeout">Timeout</button>
+          <button class="filter-btn" data-filter="validation">Validation</button>
+          <button class="filter-btn" data-filter="plugin">Plugin</button>
+          <button class="filter-btn" data-filter="flow">Flow</button>
+        </div>
+      </div>
+
+      <div id="result-info" class="result-count"></div>
+      <div class="error-results" id="error-results">
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 2rem;">Loading error codes...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Comprehensive error code reference for Microsoft Dataverse and Power Platform.</p>
+    <p><a href="../../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="tool.js"></script>
+</body>
+</html>

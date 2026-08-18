@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugin Trace Parser | GlennBeeckman.dev</title>
+  <meta name="description" content="Parse and visualize Dataverse plugin execution logs for debugging.">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .parser-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 1000px) { .parser-container { grid-template-columns: 1fr; } }
+    textarea { width: 100%; min-height: 250px; padding: 1rem; border: 2px solid var(--line); border-radius: 8px; font-family: "Fira Code", monospace; font-size: 0.9rem; }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    .trace-output { border: 1px solid var(--line); border-radius: 8px; max-height: 600px; overflow-y: auto; }
+    .trace-entry { border-bottom: 1px solid var(--line); padding: 1rem; }
+    .trace-entry:last-child { border-bottom: none; }
+    .trace-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .trace-time { font-family: "Fira Code", monospace; font-weight: 600; color: var(--accent); font-size: 0.9rem; }
+    .trace-level { padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 600; font-size: 0.8rem; }
+    .level-info { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .level-warn { background: rgba(234, 179, 8, 0.1); color: #ca8a04; }
+    .level-error { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
+    .level-debug { background: rgba(107, 114, 128, 0.1); color: #6b7280; }
+    .trace-message { color: var(--text-light); font-size: 0.95rem; line-height: 1.5; word-break: break-word; }
+    .trace-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-box { background: rgba(0, 82, 204, 0.05); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; text-align: center; }
+    .stat-label { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.35rem; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+    .controls { display: flex; gap: 0.75rem; margin: 1rem 0; flex-wrap: wrap; }
+    .btn { padding: 0.65rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-strong); }
+    .btn-secondary { background: var(--line); color: var(--ink); }
+    .btn-secondary:hover { background: var(--accent); color: white; }
+    .filter-select { padding: 0.65rem; border: 2px solid var(--line); border-radius: 6px; font-family: inherit; }
+    .filter-select:focus { outline: none; border-color: var(--accent); }
+    .no-logs { text-align: center; color: var(--text-light); padding: 2rem; }
+    .search-box { width: 100%; padding: 0.75rem; border: 2px solid var(--line); border-radius: 6px; font-family: inherit; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../../tools/index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Debugging Tool</p>
+      <h1>Plugin Trace Log Parser</h1>
+      <p class="lead">Paste plugin execution logs and see them formatted, filtered, and analyzed. Spot errors and performance issues instantly.</p>
+    </section>
+
+    <section class="panel reveal">
+      <div class="parser-container">
+        <!-- Input -->
+        <div>
+          <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Paste Trace Log</h2>
+          <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.95rem;">Copy from XrmToolBox Plugin Trace Viewer or Dataverse portal and paste here:</p>
+          <textarea id="trace-input" placeholder="Paste plugin trace log here..."></textarea>
+          <div class="controls">
+            <button class="btn btn-primary" onclick="parseLog()">Parse Log</button>
+            <button class="btn btn-secondary" onclick="clearInput()">Clear</button>
+            <button class="btn btn-secondary" onclick="loadSample()">Load Sample</button>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div>
+          <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Parsed Entries</h2>
+          
+          <div class="trace-stats" id="stats-container" style="display: none;">
+            <div class="stat-box">
+              <div class="stat-label">Total Entries</div>
+              <div class="stat-value" id="stat-total">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Errors</div>
+              <div class="stat-value" id="stat-errors" style="color: #dc2626;">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Warnings</div>
+              <div class="stat-value" id="stat-warns" style="color: #ca8a04;">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Duration</div>
+              <div class="stat-value" id="stat-duration">0ms</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <select id="level-filter" class="filter-select" onchange="filterLogs()">
+              <option value="">All Levels</option>
+              <option value="Error">Error Only</option>
+              <option value="Warning">Warning Only</option>
+              <option value="Info">Info Only</option>
+            </select>
+            <input type="text" id="search-box" class="search-box" placeholder="Search log messages..." onkeyup="filterLogs()" style="margin-bottom: 0;">
+          </div>
+
+          <div class="trace-output" id="trace-output">
+            <div class="no-logs">Parse a log to see formatted entries here...</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 82, 204, 0.05); border-radius: 8px;">
+        <h3 style="margin-top: 0;">How to Use</h3>
+        <ol style="color: var(--text-light); line-height: 1.7;">
+          <li><strong>Get the log:</strong> From XrmToolBox Plugin Trace Viewer, right-click and copy the full trace log</li>
+          <li><strong>Paste here:</strong> Paste into the textarea on the left</li>
+          <li><strong>Click Parse:</strong> Click "Parse Log" to format and analyze</li>
+          <li><strong>Filter:</strong> Use level filter and search to find issues</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Plugin trace log parser for Dataverse debugging and performance analysis.</p>
+    <p><a href="../../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="tool.js"></script>
+</body>
+</html>

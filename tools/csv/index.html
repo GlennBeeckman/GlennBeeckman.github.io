@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV to JSON Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Convert CSV to JSON and JSON to CSV.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a class="brand" href="../../index.html">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="../index.html">Tools</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../index.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Tool</p>
+      <h1>CSV ↔ JSON converter</h1>
+      <p class="lead">Convert between CSV and JSON formats instantly.</p>
+    </section>
+
+    <section class="panel reveal">
+      <article class="tool-card">
+        <h3>CSV to JSON</h3>
+        <label for="csv-input">CSV Input</label>
+        <textarea id="csv-input" placeholder="name,age,city&#10;John,30,New York&#10;Jane,25,Los Angeles"></textarea>
+        <div class="tool-actions">
+          <button type="button" id="csv-to-json">Convert to JSON</button>
+          <button type="button" id="csv-clear-1" class="ghost">Clear</button>
+        </div>
+        <label for="csv-json-output">JSON Output</label>
+        <textarea id="csv-json-output" readonly placeholder="Result"></textarea>
+        <p class="status" id="csv-status-1" aria-live="polite"></p>
+        <button type="button" id="csv-json-copy" class="ghost">Copy Output</button>
+      </article>
+
+      <article class="tool-card">
+        <h3>JSON to CSV</h3>
+        <label for="json-csv-input">JSON Input</label>
+        <textarea id="json-csv-input" placeholder='[{"name":"John","age":30},{"name":"Jane","age":25}]'></textarea>
+        <div class="tool-actions">
+          <button type="button" id="json-to-csv">Convert to CSV</button>
+          <button type="button" id="csv-clear-2" class="ghost">Clear</button>
+        </div>
+        <label for="csv-output">CSV Output</label>
+        <textarea id="csv-output" readonly placeholder="Result"></textarea>
+        <p class="status" id="csv-status-2" aria-live="polite"></p>
+        <button type="button" id="csv-copy" class="ghost">Copy Output</button>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">Back to tools</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="./tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | GlennBeeckman.dev</title>
+  <meta name="description" content="Admin dashboard for creating and managing blog posts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-dashboard">
+  <div class="bg-grid"></div>
+
+  <header class="admin-header">
+    <div class="admin-header-content">
+      <h1>Admin Dashboard</h1>
+      <button type="button" id="logout-btn" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <section class="admin-section">
+      <h2>Create New Blog Post</h2>
+
+      <form id="post-form" class="post-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="post-title">Post Title</label>
+            <input type="text" id="post-title" name="title" required placeholder="E.g., My First Article">
+          </div>
+
+          <div class="form-group">
+            <label for="post-slug">Post Slug (folder name)</label>
+            <input type="text" id="post-slug" name="slug" placeholder="Auto-generated from title" readonly>
+            <p class="hint">Will be: blog/posts/your-slug/</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="post-date">Date</label>
+            <input type="date" id="post-date" name="date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="post-layout">Layout Preset</label>
+            <select id="post-layout" name="layout">
+              <option value="simple">Simple (text only)</option>
+              <option value="with-image">With featured image</option>
+              <option value="sections">Sections (h2 headers)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="post-excerpt">Excerpt (teaser for blog list)</label>
+          <textarea id="post-excerpt" name="excerpt" rows="2" placeholder="Brief summary of your post..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="post-content">Content (HTML or plain text)</label>
+          <textarea id="post-content" name="content" rows="12" placeholder="Your blog post content here...&#10;Use HTML tags or plain text." required></textarea>
+          <p class="hint">Supports HTML tags like &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;img&gt;, etc.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Add Images</label>
+          <input type="file" id="image-upload" accept="image/*" multiple>
+          <p class="hint">Instructions: Upload images to <code>blog/assets/images/</code> folder in your repo, then reference them as: <code>&lt;img src="../../assets/images/filename.jpg" alt="description"&gt;</code></p>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Generate Post</button>
+          <button type="button" id="preview-btn" class="btn-secondary">Preview</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="admin-section" id="preview-section" style="display: none;">
+      <h2>Preview</h2>
+      <div id="preview-content" class="preview-box"></div>
+      <div class="form-actions">
+        <button type="button" id="publish-btn" class="btn-primary">Publish Directly</button>
+        <button type="button" id="download-btn" class="btn-secondary">Download Post Files</button>
+        <button type="button" id="copy-html-btn" class="btn-secondary">Copy HTML to Clipboard</button>
+        <button type="button" id="close-preview-btn" class="btn-ghost">Close Preview</button>
+      </div>
+    </section>
+
+    <section class="admin-section">
+      <h2>How to Publish</h2>
+      <p><strong>Option 1: Publish Directly (Recommended)</strong></p>
+      <ol>
+        <li>Fill in the form and click "Generate Post"</li>
+        <li>Click "Preview" to review</li>
+        <li>Click "Publish Directly" and select your <code>blog/posts/</code> folder</li>
+        <li>The post will be created and added to your blog automatically!</li>
+        <li>Commit and push to GitHub</li>
+      </ol>
+      <p style="margin-top: 1rem;"><strong>Option 2: Download Files (Manual)</strong></p>
+      <ol>
+        <li>Fill in the form and click "Generate Post"</li>
+        <li>Click "Preview" to review</li>
+        <li>Click "Download Post Files" to get the HTML file</li>
+        <li>Manually create folder <code>blog/posts/{slug}/</code> and add the file</li>
+        <li>Update <code>blog/index.html</code> to add a teaser for your new post</li>
+        <li>Commit and push to GitHub</li>
+      </ol>
+      <p style="margin-top: 1rem; padding: 1rem; background: rgba(15, 139, 141, 0.1); border-radius: 8px; border-left: 3px solid #0f8b8d;">
+        <strong>Quick tip:</strong> After uploading files to your repo, the homepage will automatically show your latest post!
+      </p>
+    </section>
+  </main>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

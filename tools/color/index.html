@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Converter Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Convert between HEX, RGB, HSL color formats.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .color-preview {
+      width: 100%;
+      height: 60px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      margin: 1rem 0;
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a class="brand" href="../../index.html">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="../index.html">Tools</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../index.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Tool</p>
+      <h1>Color converter</h1>
+      <p class="lead">Convert between HEX, RGB, and HSL color formats instantly.</p>
+    </section>
+
+    <section class="panel reveal">
+      <article class="tool-card">
+        <label for="color-picker">Pick a Color</label>
+        <input type="color" id="color-picker" value="#0066CC" style="width: 100%; height: 60px; cursor: pointer; border: none; border-radius: 6px;">
+        
+        <div class="color-preview" id="color-preview"></div>
+
+        <label for="hex-input">HEX</label>
+        <input type="text" id="hex-input" placeholder="#0066CC" />
+        <button type="button" id="hex-copy" class="ghost" style="margin-top: 0.5rem;">Copy</button>
+
+        <label for="rgb-input" style="margin-top: 1rem;">RGB</label>
+        <input type="text" id="rgb-input" placeholder="rgb(0, 102, 204)" />
+        <button type="button" id="rgb-copy" class="ghost" style="margin-top: 0.5rem;">Copy</button>
+
+        <label for="hsl-input" style="margin-top: 1rem;">HSL</label>
+        <input type="text" id="hsl-input" placeholder="hsl(210, 100%, 40%)" />
+        <button type="button" id="hsl-copy" class="ghost" style="margin-top: 0.5rem;">Copy</button>
+
+        <p class="status" id="color-status" aria-live="polite" style="margin-top: 1rem;"></p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">Back to tools</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="./tool.js"></script>
+</body>
+</html>

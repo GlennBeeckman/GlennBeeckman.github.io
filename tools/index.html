@@ -4,11 +4,236 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Developer Tools | GlennBeeckman.dev</title>
-  <meta name="description" content="Small developer tools: Base64, URL encoding, and JSON formatting.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta name="description" content="19+ searchable developer tools: Query builders, data conversion, Power Fx, troubleshooting, and more.">
   <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    .search-container {
+      position: sticky;
+      top: 60px;
+      background: var(--paper);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      z-index: 100;
+      padding: 1.5rem 0;
+      margin-bottom: 2rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .search-container {
+        background: rgba(15, 24, 25, 0.95);
+      }
+    }
+
+    .search-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      background: var(--card);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .category-section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 150px;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .category-emoji {
+      font-size: 1.5rem;
+    }
+
+    .category-header h2 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .category-header .tool-count {
+      margin-left: auto;
+      background: rgba(0, 82, 204, 0.1);
+      color: var(--accent);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      padding: 1.3rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 82, 204, 0.1);
+    }
+
+    .feature-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+
+    .feature-card p {
+      margin: 0 0 1rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      flex-grow: 1;
+      line-height: 1.5;
+    }
+
+    .feature-card a {
+      display: inline-block;
+      padding: 0.5rem 0;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .feature-card a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .tool-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .tool-tag {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      background: rgba(0, 82, 204, 0.08);
+      color: var(--accent);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--text-light);
+    }
+
+    .no-results h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--ink);
+    }
+
+    .quick-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .search-stats {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .search-container {
+        top: 50px;
+        padding: 1rem 0;
+      }
+
+      .category-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+      }
+
+      .category-header .tool-count {
+        margin-left: 0;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="bg-grid"></div>
@@ -19,62 +244,861 @@
     </a>
     <nav>
       <a href="index.html" aria-current="page">Tools</a>
+      <a href="../snippets/index.html">Snippets</a>
+      <a href="../resources/index.html">Resources</a>
       <a href="../blog/index.html">Blog</a>
-      <a href="../index.html">Home</a>
+      <a href="../search/index.html">Search</a>
     </nav>
   </header>
 
   <main>
     <section class="hero reveal">
-      <p class="kicker">Utilities</p>
-      <h1>Small tools that remove friction</h1>
-      <p class="lead">Each tool lives in its own folder so it is easier to maintain and extend.</p>
+      <p class="kicker">Developer Toolkit</p>
+      <h1>19+ Tools, Instantly Searchable</h1>
+      <p class="lead">Find exactly what you need. Convert, encode, query, debug, and analyze—all offline, all free.</p>
     </section>
 
-    <section class="panel reveal">
-      <h2>Tools</h2>
-      <div class="feature-grid">
-        <article class="feature-card">
-          <h3>Base64 encode / decode</h3>
-          <p>Convert plain text to Base64 and decode Base64 back to text.</p>
-          <a href="base64/index.html">Open tool</a>
-        </article>
-        <article class="feature-card">
-          <h3>URL encode / decode</h3>
-          <p>Escape URL-safe values and decode query-string fragments.</p>
-          <a href="url/index.html">Open tool</a>
-        </article>
-        <article class="feature-card">
-          <h3>JSON format / minify</h3>
-          <p>Pretty print JSON for readability or minify it for compact output.</p>
-          <a href="json/index.html">Open tool</a>
-        </article>
+    <!-- Search Container -->
+    <div class="search-container">
+      <div class="search-wrapper">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Search tools (e.g., 'JSON', 'Dataverse', 'convert', 'Power Fx')..."
+            aria-label="Search tools"
+          >
+        </div>
+        <div class="quick-filters">
+          <button class="filter-btn active" onclick="filterByCategory('all')">All Tools</button>
+          <button class="filter-btn" onclick="filterByCategory('power-platform')">⚡ Power Platform</button>
+          <button class="filter-btn" onclick="filterByCategory('query')">🔍 Query & Data</button>
+          <button class="filter-btn" onclick="filterByCategory('troubleshoot')">🛠️ Troubleshoot</button>
+          <button class="filter-btn" onclick="filterByCategory('convert')">🔄 Convert</button>
+        </div>
+        <div id="search-stats" class="search-stats"></div>
+      </div>
+    </div>
+
+    <!-- Quick Tools Section -->
+    <section class="panel reveal category-section" id="quick-tools-section">
+      <div class="category-header">
+        <span class="category-emoji">⭐</span>
+        <h2>Most Used Tools</h2>
+        <span class="tool-count" id="quick-count">6</span>
+      </div>
+      <div class="feature-grid" id="quick-tools-grid">
+        <!-- Dynamically populated -->
       </div>
     </section>
 
-    <section class="panel reveal">
-      <h2>How this is organized</h2>
-      <div class="feature-grid">
-        <article class="feature-card">
-          <h3>Per-tool folders</h3>
-          <p>Each utility has its own page under tools/base64, tools/url, and tools/json.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Independent updates</h3>
-          <p>You can update one tool without touching the others or the tools landing page.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Easy scaling</h3>
-          <p>Add a new folder for every new utility and link it from this card grid.</p>
-        </article>
+    <!-- Query & Data Section -->
+    <section class="panel reveal category-section" id="query-section">
+      <div class="category-header">
+        <span class="category-emoji">🔍</span>
+        <h2>Query & Data Access</h2>
+        <span class="tool-count" id="query-count">0</span>
       </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Build and understand Dataverse queries, explore field types, and analyze data structure.</p>
+      <div class="feature-grid" id="query-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Power Platform Section -->
+    <section class="panel reveal category-section" id="platform-section">
+      <div class="category-header">
+        <span class="category-emoji">⚡</span>
+        <h2>Power Platform Development</h2>
+        <span class="tool-count" id="platform-count">0</span>
+      </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Power Fx formulas, expressions, capacity planning, and Dataverse utilities.</p>
+      <div class="feature-grid" id="platform-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Troubleshooting Section -->
+    <section class="panel reveal category-section" id="troubleshoot-section">
+      <div class="category-header">
+        <span class="category-emoji">🛠️</span>
+        <h2>Troubleshooting & Debugging</h2>
+        <span class="tool-count" id="troubleshoot-count">0</span>
+      </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Debug errors, parse logs, validate syntax, and catch issues before production.</p>
+      <div class="feature-grid" id="troubleshoot-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Data Conversion Section -->
+    <section class="panel reveal category-section" id="convert-section">
+      <div class="category-header">
+        <span class="category-emoji">🔄</span>
+        <h2>Data Conversion & Formatting</h2>
+        <span class="tool-count" id="convert-count">0</span>
+      </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Transform between formats, validate syntax, and prepare data for integration.</p>
+      <div class="feature-grid" id="convert-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Security & Encoding Section -->
+    <section class="panel reveal category-section" id="security-section">
+      <div class="category-header">
+        <span class="category-emoji">🔐</span>
+        <h2>Security & Encoding</h2>
+        <span class="tool-count" id="security-count">0</span>
+      </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Encode, hash, decode, and validate data safely. All processing happens locally.</p>
+      <div class="feature-grid" id="security-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- Design & Utilities Section -->
+    <section class="panel reveal category-section" id="design-section">
+      <div class="category-header">
+        <span class="category-emoji">🎨</span>
+        <h2>Design & Utilities</h2>
+        <span class="tool-count" id="design-count">0</span>
+      </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Colors, QR codes, and visual utilities for developers and designers.</p>
+      <div class="feature-grid" id="design-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- No Results -->
+    <section id="no-results" class="no-results hidden">
+      <h3>No tools found</h3>
+      <p>Try adjusting your search or browse all categories above.</p>
     </section>
   </main>
 
+  <!-- Utility Tool Sections -->
+  <section id="json-schema" class="utility-tool">
+    <h2>JSON Schema Generator</h2>
+    <p>Paste sample JSON data and generate the schema format needed for Power Automate's "Parse JSON" action.</p>
+    
+    <div class="tool-section">
+      <label for="json-input">Sample JSON Data:</label>
+      <textarea id="json-input" placeholder='{"name": "John", "email": "john@example.com", "active": true}' rows="8"></textarea>
+      
+      <button id="generate-schema" class="btn-primary">Generate Schema</button>
+      
+      <div id="schema-output" style="display: none; margin-top: 1rem;">
+        <label>Generated Schema (copy to Power Automate):</label>
+        <textarea id="schema-result" readonly rows="10"></textarea>
+        <button id="copy-schema" class="btn-secondary" style="margin-top: 0.5rem;">Copy to Clipboard</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="fx-validator" class="utility-tool">
+    <h2>Power Fx Expression Validator</h2>
+    <p>Check Power Fx syntax for common errors. Note: This performs basic syntax validation only.</p>
+    
+    <div class="tool-section">
+      <label for="fx-input">Power Fx Expression:</label>
+      <textarea id="fx-input" placeholder="Filter(Contacts, Status = &quot;Active&quot;)" rows="6"></textarea>
+      
+      <button id="validate-fx" class="btn-primary">Validate</button>
+      
+      <div id="fx-output" style="display: none; margin-top: 1rem;">
+        <div id="fx-result"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="regex-tester" class="utility-tool">
+    <h2>Regex Tester</h2>
+    <p>Test regular expressions for pattern matching in Power Fx and Power Automate.</p>
+    
+    <div class="tool-section">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label for="regex-pattern">Pattern:</label>
+          <input type="text" id="regex-pattern" placeholder="^\w+@\w+\.\w+$" />
+        </div>
+        <div>
+          <label for="regex-flags">Flags (g,i,m):</label>
+          <input type="text" id="regex-flags" placeholder="i" />
+        </div>
+      </div>
+      
+      <label for="regex-test" style="margin-top: 1rem;">Test String:</label>
+      <textarea id="regex-test" placeholder="test@example.com" rows="4"></textarea>
+      
+      <button id="run-regex" class="btn-primary" style="margin-top: 0.5rem;">Test Pattern</button>
+      
+      <div id="regex-output" style="display: none; margin-top: 1rem;">
+        <div id="regex-result"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guid-gen" class="utility-tool">
+    <h2>GUID Generator</h2>
+    <p>Generate unique identifiers for Dataverse records and Power Platform components.</p>
+    
+    <div class="tool-section">
+      <button id="generate-guid" class="btn-primary">Generate New GUID</button>
+      
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; margin-top: 1rem;">
+        <input type="text" id="guid-output" readonly placeholder="Your GUID will appear here" />
+        <button id="copy-guid" class="btn-secondary" style="padding: 0.5rem 1rem;">Copy</button>
+      </div>
+      
+      <button id="generate-5-guids" class="btn-secondary" style="margin-top: 0.5rem;">Generate 5 GUIDs</button>
+      <div id="multi-guid-output" style="display: none; margin-top: 1rem;">
+        <textarea id="multi-guid-result" readonly rows="6"></textarea>
+        <button id="copy-multi-guid" class="btn-secondary" style="margin-top: 0.5rem;">Copy All</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="timestamp" class="utility-tool">
+    <h2>Unix Timestamp Converter</h2>
+    <p>Convert between Unix timestamps and readable dates for Power Automate workflows.</p>
+    
+    <div class="tool-section">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label for="unix-timestamp">Unix Timestamp:</label>
+          <input type="number" id="unix-timestamp" placeholder="1686400000" />
+          <button id="convert-from-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
+          <input type="text" id="unix-to-date" readonly style="margin-top: 0.5rem;" />
+        </div>
+        <div>
+          <label for="readable-date">Readable Date:</label>
+          <input type="datetime-local" id="readable-date" />
+          <button id="convert-to-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
+          <input type="text" id="date-to-unix" readonly style="margin-top: 0.5rem;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="field-types" class="utility-tool">
+    <h2>Dataverse Field Types Reference</h2>
+    <p>Quick lookup for field types and their Power Fx equivalents.</p>
+    
+    <div class="reference-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Dataverse Type</th>
+            <th>Power Fx Equivalent</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Text</td>
+            <td>Text</td>
+            <td>Text(User().FullName)</td>
+          </tr>
+          <tr>
+            <td>Whole Number</td>
+            <td>Number</td>
+            <td>Value(5)</td>
+          </tr>
+          <tr>
+            <td>Decimal Number</td>
+            <td>Number (decimal context)</td>
+            <td>3.14</td>
+          </tr>
+          <tr>
+            <td>Yes/No</td>
+            <td>Boolean</td>
+            <td>true or false</td>
+          </tr>
+          <tr>
+            <td>Date Only</td>
+            <td>Date</td>
+            <td>Today()</td>
+          </tr>
+          <tr>
+            <td>Date and Time</td>
+            <td>DateTime</td>
+            <td>Now()</td>
+          </tr>
+          <tr>
+            <td>Lookup</td>
+            <td>Record</td>
+            <td>First(Contacts).Department</td>
+          </tr>
+          <tr>
+            <td>Choice</td>
+            <td>Text or Number</td>
+            <td>"Active"</td>
+          </tr>
+          <tr>
+            <td>Multiple Choice Options</td>
+            <td>Table of Text</td>
+            <td>{"Option1"; "Option2"}</td>
+          </tr>
+          <tr>
+            <td>Currency</td>
+            <td>Number (decimal context)</td>
+            <td>99.99</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="json-schema" class="utility-tool">
+    <h2>JSON Schema Generator</h2>
+    <p>Paste sample JSON data and generate the schema format needed for Power Automate's "Parse JSON" action.</p>
+    
+    <div class="tool-section">
+      <label for="json-input">Sample JSON Data:</label>
+      <textarea id="json-input" placeholder='{"name": "John", "email": "john@example.com", "active": true}' rows="8"></textarea>
+      
+      <button id="generate-schema" class="btn-primary">Generate Schema</button>
+      
+      <div id="schema-output" style="display: none; margin-top: 1rem;">
+        <label>Generated Schema (copy to Power Automate):</label>
+        <textarea id="schema-result" readonly rows="10"></textarea>
+        <button id="copy-schema" class="btn-secondary" style="margin-top: 0.5rem;">Copy to Clipboard</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="fx-validator" class="utility-tool">
+    <h2>Power Fx Expression Validator</h2>
+    <p>Check Power Fx syntax for common errors. Note: This performs basic syntax validation only.</p>
+    
+    <div class="tool-section">
+      <label for="fx-input">Power Fx Expression:</label>
+      <textarea id="fx-input" placeholder="Filter(Contacts, Status = &quot;Active&quot;)" rows="6"></textarea>
+      
+      <button id="validate-fx" class="btn-primary">Validate</button>
+      
+      <div id="fx-output" style="display: none; margin-top: 1rem;">
+        <div id="fx-result"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="regex-tester" class="utility-tool">
+    <h2>Regex Tester</h2>
+    <p>Test regular expressions for pattern matching in Power Fx and Power Automate.</p>
+    
+    <div class="tool-section">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label for="regex-pattern">Pattern:</label>
+          <input type="text" id="regex-pattern" placeholder="^\w+@\w+\.\w+$" />
+        </div>
+        <div>
+          <label for="regex-flags">Flags (g,i,m):</label>
+          <input type="text" id="regex-flags" placeholder="i" />
+        </div>
+      </div>
+      
+      <label for="regex-test" style="margin-top: 1rem;">Test String:</label>
+      <textarea id="regex-test" placeholder="test@example.com" rows="4"></textarea>
+      
+      <button id="run-regex" class="btn-primary" style="margin-top: 0.5rem;">Test Pattern</button>
+      
+      <div id="regex-output" style="display: none; margin-top: 1rem;">
+        <div id="regex-result"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guid-gen" class="utility-tool">
+    <h2>GUID Generator</h2>
+    <p>Generate unique identifiers for Dataverse records and Power Platform components.</p>
+    
+    <div class="tool-section">
+      <button id="generate-guid" class="btn-primary">Generate New GUID</button>
+      
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; margin-top: 1rem;">
+        <input type="text" id="guid-output" readonly placeholder="Your GUID will appear here" />
+        <button id="copy-guid" class="btn-secondary" style="padding: 0.5rem 1rem;">Copy</button>
+      </div>
+      
+      <button id="generate-5-guids" class="btn-secondary" style="margin-top: 0.5rem;">Generate 5 GUIDs</button>
+      <div id="multi-guid-output" style="display: none; margin-top: 1rem;">
+        <textarea id="multi-guid-result" readonly rows="6"></textarea>
+        <button id="copy-multi-guid" class="btn-secondary" style="margin-top: 0.5rem;">Copy All</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="timestamp" class="utility-tool">
+    <h2>Unix Timestamp Converter</h2>
+    <p>Convert between Unix timestamps and readable dates for Power Automate workflows.</p>
+    
+    <div class="tool-section">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label for="unix-timestamp">Unix Timestamp:</label>
+          <input type="number" id="unix-timestamp" placeholder="1686400000" />
+          <button id="convert-from-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
+          <input type="text" id="unix-to-date" readonly style="margin-top: 0.5rem;" />
+        </div>
+        <div>
+          <label for="readable-date">Readable Date:</label>
+          <input type="datetime-local" id="readable-date" />
+          <button id="convert-to-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
+          <input type="text" id="date-to-unix" readonly style="margin-top: 0.5rem;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="field-types" class="utility-tool">
+    <h2>Dataverse Field Types Reference</h2>
+    <p>Quick lookup for field types and their Power Fx equivalents.</p>
+    
+    <div class="reference-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Dataverse Type</th>
+            <th>Power Fx Equivalent</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Text</td>
+            <td>Text</td>
+            <td>Text(User().FullName)</td>
+          </tr>
+          <tr>
+            <td>Whole Number</td>
+            <td>Number</td>
+            <td>Value(5)</td>
+          </tr>
+          <tr>
+            <td>Decimal Number</td>
+            <td>Number (decimal context)</td>
+            <td>3.14</td>
+          </tr>
+          <tr>
+            <td>Yes/No</td>
+            <td>Boolean</td>
+            <td>true or false</td>
+          </tr>
+          <tr>
+            <td>Date Only</td>
+            <td>Date</td>
+            <td>Today()</td>
+          </tr>
+          <tr>
+            <td>Date and Time</td>
+            <td>DateTime</td>
+            <td>Now()</td>
+          </tr>
+          <tr>
+            <td>Lookup</td>
+            <td>Record</td>
+            <td>First(Contacts).Department</td>
+          </tr>
+          <tr>
+            <td>Choice</td>
+            <td>Text or Number</td>
+            <td>"Active"</td>
+          </tr>
+          <tr>
+            <td>Multiple Choice Options</td>
+            <td>Table of Text</td>
+            <td>{"Option1"; "Option2"}</td>
+          </tr>
+          <tr>
+            <td>Currency</td>
+            <td>Number (decimal context)</td>
+            <td>99.99</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <footer class="site-footer">
-    <p>Need another utility? Create a new subfolder under tools and add one card here.</p>
+    <p>19+ developer tools for Power Platform, data conversion, and troubleshooting.</p>
+    <p><a href="../admin/index.html">Admin</a></p>
   </footer>
 
+  <style>
+    .utility-tool {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 3rem auto;
+      max-width: 1200px;
+    }
+
+    .utility-tool h2 {
+      color: var(--ink);
+      margin-top: 0;
+    }
+
+    .tool-section {
+      margin-top: 1.5rem;
+    }
+
+    .tool-section label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .tool-section textarea,
+    .tool-section input[type="text"],
+    .tool-section input[type="number"],
+    .tool-section input[type="datetime-local"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .tool-section textarea:focus,
+    .tool-section input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+    }
+
+    .tool-section button {
+      margin-top: 0.5rem;
+      padding: 0.65rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-strong);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--line);
+      color: var(--ink);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .reference-table {
+      margin-top: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .reference-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .reference-table th,
+    .reference-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .reference-table th {
+      background: rgba(0, 82, 204, 0.05);
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .reference-table td {
+      font-size: 0.9rem;
+    }
+  </style>
+
+  <script>
+    const tools = [
+      // Quick Tools (Most Used)
+      { name: "Base64 Encoder/Decoder", desc: "Encode text to Base64 or decode back to plain text. Includes PDF to Base64 converter.", url: "base64/index.html", tags: ["encode", "decode", "base64"], categories: ["quick-tools", "security"] },
+      { name: "JSON Format/Minify", desc: "Validate, format for readability, or minify JSON. Handles invalid JSON gracefully.", url: "json/index.html", tags: ["json", "format", "validate"], categories: ["quick-tools", "convert"] },
+      { name: "URL Encoder/Decoder", desc: "Encode text for URLs or decode URL-encoded values. Essential for query parameters.", url: "url/index.html", tags: ["url", "encode", "query"], categories: ["quick-tools", "convert"] },
+      { name: "GUID Generator", desc: "Generate unique GUIDs for Dataverse records and components. Single or batch generation.", url: "#guid-gen", tags: ["guid", "unique id"], categories: ["quick-tools", "power-platform"] },
+      { name: "Color Converter", desc: "Convert between HEX, RGB, and HSL with live preview. Perfect for designers and front-end devs.", url: "color/index.html", tags: ["color", "hex", "rgb"], categories: ["quick-tools", "design"] },
+      { name: "Number Converter", desc: "Convert between Decimal, Hex, Binary, and Octal. Real-time as you type.", url: "hex/index.html", tags: ["number", "binary", "hex"], categories: ["quick-tools", "convert"] },
+
+      // Query & Data
+      { name: "FetchXML Builder", desc: "Build FetchXML and OData queries visually without writing code. Generate for Web API and plugins.", url: "fetchxml/index.html", tags: ["fetchxml", "odata", "query"], categories: ["query", "power-platform"] },
+      { name: "OData Query Builder", desc: "Build Dataverse OData queries visually with filters, sorting, and pagination.", url: "odata/index.html", tags: ["odata", "query", "dataverse"], categories: ["query", "power-platform"] },
+      { name: "Dataverse Field Types Reference", desc: "Quick lookup for Dataverse field types and their Power Fx equivalents. No more guessing.", url: "#field-types", tags: ["fields", "types", "dataverse"], categories: ["query", "power-platform"] },
+      { name: "Capacity Calculator", desc: "Estimate Dataverse storage, API limits, and resource usage. Project data growth over time.", url: "capacity/index.html", tags: ["capacity", "storage", "api limits"], categories: ["query", "power-platform"] },
+
+      // Power Platform Development
+      { name: "Power Fx Function Reference", desc: "Searchable reference of Power Fx functions with syntax, parameters, examples, and return types.", url: "powerfx-ref/index.html", tags: ["power fx", "functions", "reference"], categories: ["power-platform"] },
+      { name: "Power Fx Expression Validator", desc: "Check Power Fx syntax for common errors. Basic syntax validation for expressions.", url: "#fx-validator", tags: ["power fx", "validate", "syntax"], categories: ["troubleshoot", "power-platform"] },
+      { name: "Regex Tester", desc: "Test regular expressions for Power Fx and Power Automate. Supports standard regex flags.", url: "#regex-tester", tags: ["regex", "pattern", "test"], categories: ["power-platform", "troubleshoot"] },
+      { name: "Unix Timestamp Converter", desc: "Convert between Unix timestamps and dates. Essential for Power Automate debugging.", url: "#timestamp", tags: ["timestamp", "date", "time"], categories: ["convert", "power-platform"] },
+
+      // Troubleshooting
+      { name: "Error Code Lookup", desc: "Search Dataverse error codes with explanations and solutions. Quickly troubleshoot issues.", url: "errors/index.html", tags: ["error", "troubleshoot", "dataverse"], categories: ["troubleshoot", "power-platform"] },
+      { name: "Plugin Trace Log Parser", desc: "Paste plugin logs and see them formatted, filtered, and analyzed. Spot errors instantly.", url: "plugintrace/index.html", tags: ["log", "trace", "plugin"], categories: ["troubleshoot", "power-platform"] },
+
+      // Data Conversion
+      { name: "CSV ↔ JSON", desc: "Bidirectional conversion between CSV and JSON. Perfect for data import/export workflows.", url: "csv/index.html", tags: ["csv", "json", "convert"], categories: ["convert"] },
+      { name: "Markdown ↔ HTML", desc: "Convert Markdown to HTML instantly. Supports headings, lists, bold, italic, links, code.", url: "markdown/index.html", tags: ["markdown", "html", "convert"], categories: ["convert"] },
+      { name: "XML Formatter", desc: "Format XML with proper indentation and validate syntax. Catches malformed XML.", url: "xml/index.html", tags: ["xml", "format", "validate"], categories: ["convert"] },
+      { name: "YAML Formatter", desc: "Format YAML and validate syntax. Essential for Kubernetes, Docker, CI/CD configs.", url: "yaml/index.html", tags: ["yaml", "format", "config"], categories: ["convert"] },
+
+      // Security & Encoding
+      { name: "Hash Generator", desc: "Generate SHA-256, SHA-1, and SHA-512 hashes. Use for checksums and data integrity.", url: "hash/index.html", tags: ["hash", "sha", "security"], categories: ["security"] },
+      { name: "JWT Decoder", desc: "Decode JSON Web Tokens to inspect header and payload. Debug authentication issues.", url: "jwt/index.html", tags: ["jwt", "token", "auth"], categories: ["security"] },
+      { name: "File Type Validator", desc: "Check file MIME types and validate signatures. Verify files match their extensions.", url: "filetype/index.html", tags: ["file", "mime", "validate"], categories: ["security"] },
+
+      // Design & Utilities
+      { name: "QR Code Generator", desc: "Generate QR codes from text, URLs, WiFi, and vCards. Customize colors and download.", url: "qrcode/index.html", tags: ["qr", "code", "generate"], categories: ["design"] },
+      { name: "JSON Schema Generator", desc: "Generate JSON Schema from sample data. Use with Power Automate's Parse JSON.", url: "#json-schema", tags: ["schema", "json", "validate"], categories: ["convert", "power-platform"] }
+    ];
+
+    let filteredTools = [...tools];
+    let currentFilter = "all";
+    let currentSearch = "";
+
+    function renderTools() {
+      // Clear all sections
+      document.querySelectorAll("[id$='-grid']").forEach(el => el.innerHTML = "");
+      document.querySelectorAll("[id$='-section']").forEach(el => el.classList.remove("hidden"));
+
+      const sections = {
+        "quick-tools": document.getElementById("quick-tools-grid"),
+        "query": document.getElementById("query-grid"),
+        "power-platform": document.getElementById("platform-grid"),
+        "troubleshoot": document.getElementById("troubleshoot-grid"),
+        "convert": document.getElementById("convert-grid"),
+        "security": document.getElementById("security-grid"),
+        "design": document.getElementById("design-grid")
+      };
+
+      let totalDisplayed = 0;
+
+      filteredTools.forEach(tool => {
+        const toolCard = document.createElement("article");
+        toolCard.className = "feature-card";
+        
+        const tagsHtml = tool.tags.map(tag => `<span class="tool-tag">${tag}</span>`).join("");
+        
+        toolCard.innerHTML = `
+          <h3>${tool.name}</h3>
+          <p>${tool.desc}</p>
+          <a href="${tool.url}">Open tool →</a>
+          <div class="tool-tags">${tagsHtml}</div>
+        `;
+
+        // Add to all matching sections
+        tool.categories.forEach(category => {
+          if (sections[category]) {
+            sections[category].appendChild(toolCard.cloneNode(true));
+            totalDisplayed++;
+          }
+        });
+      });
+
+      // Update counts
+      Object.entries(sections).forEach(([category, grid]) => {
+        const count = grid.children.length;
+        const countEl = document.getElementById(category.replace("-grid", "") + "-count");
+        if (countEl) countEl.textContent = count;
+      });
+
+      // Hide empty sections
+      document.querySelectorAll("[id$='-section']").forEach(section => {
+        const sectionId = section.id.replace("-section", "");
+        const grid = document.getElementById(sectionId + "-grid");
+        if (grid && grid.children.length === 0) {
+          section.classList.add("hidden");
+        }
+      });
+
+      // Show/hide no results
+      if (totalDisplayed === 0) {
+        document.getElementById("no-results").classList.remove("hidden");
+      } else {
+        document.getElementById("no-results").classList.add("hidden");
+      }
+
+      // Update stats
+      updateSearchStats();
+    }
+
+    function updateSearchStats() {
+      const stats = document.getElementById("search-stats");
+      if (currentSearch) {
+        stats.textContent = `Found ${filteredTools.length} tool${filteredTools.length !== 1 ? "s" : ""}`;
+      } else if (currentFilter !== "all") {
+        stats.textContent = `Showing ${filteredTools.length} tool${filteredTools.length !== 1 ? "s" : ""}`;
+      } else {
+        stats.textContent = "";
+      }
+    }
+
+    function searchTools(query) {
+      currentSearch = query.toLowerCase();
+      filterTools();
+    }
+
+    function filterByCategory(category) {
+      currentFilter = category;
+      
+      // Update button states
+      document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+      event?.target?.classList.add("active");
+      
+      filterTools();
+    }
+
+    function filterTools() {
+      filteredTools = tools.filter(tool => {
+        const matchesSearch = !currentSearch || 
+          tool.name.toLowerCase().includes(currentSearch) ||
+          tool.desc.toLowerCase().includes(currentSearch) ||
+          tool.tags.some(tag => tag.toLowerCase().includes(currentSearch));
+        
+        const matchesFilter = currentFilter === "all" || 
+          tool.categories.includes(currentFilter);
+        
+        return matchesSearch && matchesFilter;
+      });
+
+      renderTools();
+    }
+
+    // Event listener
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      searchTools(e.target.value);
+    });
+
+    // Initial render
+    renderTools();
+
+    // ===== UTILITY TOOL EVENT HANDLERS =====
+
+    // JSON Schema Generator
+    document.getElementById("generate-schema")?.addEventListener("click", () => {
+      const input = document.getElementById("json-input").value;
+      try {
+        const json = JSON.parse(input);
+        const schema = { type: "object", properties: {} };
+        
+        for (const key in json) {
+          const value = json[key];
+          schema.properties[key] = {
+            type: typeof value === "boolean" ? "boolean" : typeof value === "number" ? "number" : "string"
+          };
+        }
+        
+        document.getElementById("schema-result").value = JSON.stringify(schema, null, 2);
+        document.getElementById("schema-output").style.display = "block";
+      } catch (e) {
+        alert("Invalid JSON: " + e.message);
+      }
+    });
+
+    document.getElementById("copy-schema")?.addEventListener("click", () => {
+      const text = document.getElementById("schema-result").value;
+      navigator.clipboard.writeText(text).then(() => alert("Schema copied!"));
+    });
+
+    // GUID Generator
+    function generateGUID() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === "x" ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    document.getElementById("generate-guid")?.addEventListener("click", () => {
+      document.getElementById("guid-output").value = generateGUID();
+    });
+
+    document.getElementById("copy-guid")?.addEventListener("click", () => {
+      const text = document.getElementById("guid-output").value;
+      if (text) navigator.clipboard.writeText(text).then(() => alert("GUID copied!"));
+    });
+
+    document.getElementById("generate-5-guids")?.addEventListener("click", () => {
+      const guids = Array.from({length: 5}, () => generateGUID()).join("\n");
+      document.getElementById("multi-guid-result").value = guids;
+      document.getElementById("multi-guid-output").style.display = "block";
+    });
+
+    document.getElementById("copy-multi-guid")?.addEventListener("click", () => {
+      const text = document.getElementById("multi-guid-result").value;
+      navigator.clipboard.writeText(text).then(() => alert("GUIDs copied!"));
+    });
+
+    // Regex Tester
+    document.getElementById("run-regex")?.addEventListener("click", () => {
+      const pattern = document.getElementById("regex-pattern").value;
+      const flags = document.getElementById("regex-flags").value;
+      const testStr = document.getElementById("regex-test").value;
+      
+      try {
+        const regex = new RegExp(pattern, flags);
+        const result = regex.test(testStr);
+        document.getElementById("regex-result").innerHTML = result ? 
+          "<p style='color: #15803d;'>✓ Match found!</p>" : 
+          "<p style='color: #9b1c1c;'>✗ No match</p>";
+        document.getElementById("regex-output").style.display = "block";
+      } catch (e) {
+        document.getElementById("regex-result").innerHTML = "<p style='color: #9b1c1c;'>Error: " + e.message + "</p>";
+        document.getElementById("regex-output").style.display = "block";
+      }
+    });
+
+    // Unix Timestamp Converter
+    document.getElementById("convert-from-unix")?.addEventListener("click", () => {
+      const timestamp = parseInt(document.getElementById("unix-timestamp").value) * 1000;
+      const date = new Date(timestamp).toLocaleString();
+      document.getElementById("unix-to-date").value = date;
+    });
+
+    document.getElementById("convert-to-unix")?.addEventListener("click", () => {
+      const dateStr = document.getElementById("readable-date").value;
+      const timestamp = Math.floor(new Date(dateStr).getTime() / 1000);
+      document.getElementById("date-to-unix").value = timestamp;
+    });
+
+    // Power Fx Expression Validator
+    document.getElementById("validate-fx")?.addEventListener("click", () => {
+      const input = document.getElementById("fx-input").value;
+      const output = document.getElementById("fx-output");
+      const result = document.getElementById("fx-result");
+      
+      let isValid = input.length > 0;
+      if (isValid && input.includes("(") && !input.includes(")")) {
+        isValid = false;
+      }
+      
+      result.innerHTML = isValid ? 
+        "<p style='color: #15803d;'>✓ Syntax looks valid</p>" : 
+        "<p style='color: #9b1c1c;'>✗ Syntax may have issues</p>";
+      output.style.display = "block";
+    });
+  </script>
   <script src="../assets/js/main.js"></script>
 </body>
 </html>

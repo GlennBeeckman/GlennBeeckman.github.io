@@ -33,6 +33,7 @@
 
     <section class="panel reveal">
       <article class="tool-card">
+        <h3>Text Input</h3>
         <label for="base64-input">Input</label>
         <textarea id="base64-input" placeholder="Paste text or Base64 value"></textarea>
         <div class="tool-actions">
@@ -42,7 +43,90 @@
         </div>
         <label for="base64-output">Output</label>
         <textarea id="base64-output" readonly placeholder="Result"></textarea>
+        <button type="button" id="base64-copy" class="ghost">Copy</button>
         <p class="status" id="base64-status" aria-live="polite"></p>
+      </article>
+      
+      <article class="tool-card">
+        <h3>PDF File to Base64</h3>
+        <label for="pdf-file-input">Select PDF File (or drag & drop)</label>
+        <div id="pdf-drop-zone" style="border: 2px dashed var(--line); border-radius: 6px; padding: 2rem; text-align: center; cursor: pointer; background: rgba(0, 102, 204, 0.02); margin: 0.5rem 0;">
+          <input type="file" id="pdf-file-input" accept=".pdf" style="display: none;" />
+          <p style="margin: 0; color: var(--ink); font-weight: 500;">Drag and drop a PDF file here, or click to select</p>
+          <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Maximum file size: 10 MB</p>
+        </div>
+        <div class="tool-actions">
+          <button type="button" id="pdf-encode">Encode PDF</button>
+          <button type="button" id="pdf-clear" class="ghost">Clear</button>
+        </div>
+        <label for="pdf-output">Output</label>
+        <textarea id="pdf-output" readonly placeholder="Base64 result will appear here"></textarea>
+        <button type="button" id="pdf-copy" class="ghost">Copy</button>
+        <p class="status" id="pdf-status" aria-live="polite"></p>
+      </article>
+
+      <article class="tool-card">
+        <h3>Base64 to File Decoder</h3>
+        <p style="color: var(--text-light); margin-bottom: 1rem;">Paste Base64 or data URL and decode to downloadable file. Auto-detects file type and shows preview.</p>
+        
+        <label for="b64-file-input">Base64 Input</label>
+        <textarea id="b64-file-input" placeholder="Paste Base64 or data:image/png;base64,... here" rows="6"></textarea>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+          <div>
+            <label for="b64-filename">File Name</label>
+            <input type="text" id="b64-filename" value="decoded-file" />
+          </div>
+          <div>
+            <label for="b64-mime">MIME Type</label>
+            <input type="text" id="b64-mime" placeholder="Auto-detected" />
+          </div>
+          <div>
+            <label for="b64-extension">Extension</label>
+            <input type="text" id="b64-extension" placeholder="Auto-detected" />
+          </div>
+        </div>
+        
+        <div class="tool-actions">
+          <button type="button" id="b64-decode-btn">Decode + Analyze</button>
+          <button type="button" id="b64-download-btn" disabled>Download File</button>
+          <button type="button" id="b64-clear-btn" class="ghost">Clear</button>
+        </div>
+        
+        <p class="status" id="b64-status" aria-live="polite"></p>
+        
+        <div id="b64-summary" style="display: none; margin-top: 1.5rem; border-top: 1px dashed var(--line); padding-top: 1rem;">
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: var(--text-light);">Data URL Header</div>
+            <div id="b64-sum-header" style="font-family: 'Fira Code', monospace; word-break: break-all;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: var(--text-light);">Detected MIME</div>
+            <div id="b64-sum-mime" style="font-family: 'Fira Code', monospace;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: var(--text-light);">Detected Extension</div>
+            <div id="b64-sum-ext" style="font-family: 'Fira Code', monospace;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: var(--text-light);">Base64 Characters</div>
+            <div id="b64-sum-b64len" style="font-family: 'Fira Code', monospace;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: var(--text-light);">Decoded Size</div>
+            <div id="b64-sum-size" style="font-family: 'Fira Code', monospace;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 0.75rem;">
+            <div style="font-weight: 600; color: var(--text-light);">SHA-256</div>
+            <div id="b64-sum-hash" style="font-family: 'Fira Code', monospace; font-size: 0.85rem; word-break: break-all;"></div>
+          </div>
+        </div>
+        
+        <div id="b64-preview" style="display: none; margin-top: 1.5rem; border-top: 1px dashed var(--line); padding-top: 1rem;">
+          <strong>Preview</strong>
+          <div id="b64-preview-box" style="margin-top: 0.75rem; border: 1px solid var(--line); border-radius: 8px; padding: 1rem; background: #f9f9f9; max-height: 400px; overflow: auto;"></div>
+          <p id="b64-preview-note" style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.85rem;"></p>
+        </div>
       </article>
     </section>
   </main>

@@ -39,7 +39,22 @@ Your site will be available at:
 
 ## Add a new blog post
 
+There are two ways:
+
+**Option 1: Use the Admin Panel (easier)**
+
+1. Go to `/admin/` on your site (or `admin/index.html` locally).
+2. Login with username `admin` and password `changeme` (change these in `admin/js/admin.js` before going live).
+3. Fill in the post form, preview, and download the post files.
+4. Extract downloaded files to `blog/posts/your-slug/`.
+5. Add a teaser to `blog/index.html` and commit.
+
+**Option 2: Manual (more control)**
+
 1. Create a new subfolder under `blog/posts/` (for example `blog/posts/my-post/`).
-2. Create an `index.html` file inside that post folder.
+2. Create an `index.html` file inside that post folder (use existing posts as templates).
 3. Add a teaser entry in `blog/index.html` linking to `posts/my-post/`.
 4. Optionally feature it on the home page in `index.html`.
+5. Commit and push to GitHub.
+
+**Note:** The homepage automatically shows your latest blog post!

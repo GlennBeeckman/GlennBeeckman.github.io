@@ -9,7 +9,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
-</head>
+  <link rel="alternate" type="application/rss+xml" title="GlennBeeckman.dev Blog" href="/feed.xml">
+  <style>
+    .newsletter-section {
+      background: linear-gradient(135deg, #0052a3 0%, #0080ff 100%);
+      border-radius: 12px;
+      padding: 3rem 2.5rem;
+      margin: 3rem 0;
+      color: #fff;
+      text-align: center;
+    }
+    .newsletter-section h2 { color: #fff; margin-top: 0; font-size: 1.6rem; }
+    .newsletter-section p { color: rgba(255,255,255,.85); margin-bottom: 1.5rem; font-size: 1rem; }
+    .newsletter-form { display: flex; gap: .75rem; max-width: 480px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+    .newsletter-form input[type="email"] { flex: 1; min-width: 200px; padding: .75rem 1rem; border: none; border-radius: 6px; font-family: "Space Grotesk", sans-serif; font-size: .95rem; }
+    .newsletter-form input[type="email"]:focus { outline: 2px solid #fff; }
+    .newsletter-form button { background: #fff; color: var(--accent); border: none; border-radius: 6px; padding: .75rem 1.5rem; font-family: "Space Grotesk", sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; transition: opacity .15s; white-space: nowrap; }
+    .newsletter-form button:hover { opacity: .9; }
+    .newsletter-note { font-size: .8rem; color: rgba(255,255,255,.6); margin-top: .75rem; }
+    .rss-link { display: inline-flex; align-items: center; gap: .35rem; font-size: .85rem; color: rgba(255,255,255,.7); text-decoration: none; margin-top: .5rem; }
+    .rss-link:hover { color: #fff; }
+  </style>
 <body>
   <div class="bg-grid"></div>
   <header class="site-header">
@@ -19,37 +39,60 @@
     </a>
     <nav>
       <a href="tools/index.html">Tools</a>
+      <a href="snippets/index.html">Snippets</a>
+      <a href="resources/index.html">Resources</a>
       <a href="blog/index.html">Blog</a>
+      <a href="search/index.html">Search</a>
       <a href="mailto:hello@example.com">Contact</a>
     </nav>
   </header>
 
   <main>
     <section class="hero reveal">
-      <p class="kicker">Builder Notes</p>
-      <h1>Developer micro-tools and practical Power Platform insights.</h1>
-      <p class="lead">This site hosts lightweight tools I use daily and short articles about Power Platform architecture, governance, and delivery patterns.</p>
+      <p class="kicker">Developer Toolkit + Learning Hub</p>
+      <h1>Free tools and Power Platform insights for builders.</h1>
+      <p class="lead">19+ free developer tools (Base64, JSON, CSV, Color, Hash, JWT, XML, YAML, and more) + Power Platform utilities + learning resources. All local, all free, no sign-up.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="tools/index.html">Open tools</a>
-        <a class="btn btn-secondary" href="blog/index.html">Read blog</a>
+        <a class="btn btn-primary" href="tools/index.html">Explore 19+ tools</a>
+        <a class="btn btn-secondary" href="blog/index.html">Read articles</a>
       </div>
     </section>
 
     <section class="panel reveal">
       <div>
-        <h2>What you can find here</h2>
-        <p>Fast utilities for encoding/decoding and text transforms, plus Power Platform posts based on real delivery experience.</p>
+        <h2>What's available on this site</h2>
+        <p>Fast, free tools for developers and Power Platform professionals. Encode, format, convert, and validate data instantly. Everything runs locally—your data never leaves your device.</p>
       </div>
       <div class="feature-grid">
         <article class="feature-card">
-          <h3>Developer tools</h3>
-          <p>Base64 encoder/decoder, URL encoder/decoder, and JSON formatting helpers.</p>
-          <a href="tools/index.html">Explore tools</a>
+          <h3>Free Developer Tools</h3>
+          <p>19+ tools for encoding, formatting, converting, and validating data. All offline, no sign-up required.</p>
+          <a href="tools/index.html">Explore all tools →</a>
+        </article>
+        <article class="feature-card">
+          <h3>Power Platform Utilities</h3>
+          <p>OData builder, Power Fx validator, GUID generator, JSON schema generator, and more.</p>
+          <a href="tools/index.html">View utilities →</a>
+        </article>
+        <article class="feature-card">
+          <h3>Code snippets</h3>
+          <p>Reusable Power Fx formulas, Power Automate patterns, and common solutions.</p>
+          <a href="snippets/index.html">View snippets →</a>
+        </article>
+        <article class="feature-card">
+          <h3>Learning resources</h3>
+          <p>Curated links to docs, communities, tools, and official learning paths.</p>
+          <a href="resources/index.html">Explore resources →</a>
         </article>
         <article class="feature-card">
           <h3>Power Platform blog</h3>
           <p>Hands-on notes for makers, admins, and solution architects.</p>
-          <a href="blog/index.html">View posts</a>
+          <a href="blog/index.html">Read articles →</a>
+        </article>
+        <article class="feature-card">
+          <h3>Search everything</h3>
+          <p>Find tools, snippets, articles, and resources across the entire site instantly.</p>
+          <a href="search/index.html">Search now →</a>
         </article>
       </div>
     </section>
@@ -60,13 +103,25 @@
         <p class="post-meta">June 10, 2026</p>
         <h3>Lorem ipsum: placeholder post title</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sed nisl in velit fermentum vestibulum.</p>
-        <a href="blog/posts/lorem-ipsum-placeholder/">Read article</a>
+        <a href="blog/posts/lorem-ipsum-placeholder/index.html">Read article</a>
       </article>
+    </section>
+
+    <section class="newsletter-section reveal">
+      <h2>Stay in the loop</h2>
+      <p>Get new posts, snippets, and tools delivered straight to your inbox. No spam, unsubscribe any time.</p>
+      <form class="newsletter-form" action="https://buttondown.com/api/emails/embed-subscribe/YOUR_USERNAME" method="POST" target="_blank">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="newsletter-note">Powered by <a href="https://buttondown.com" target="_blank" rel="noopener" style="color:inherit;">Buttondown</a>. Free to use.</p>
+      <a class="rss-link" href="feed.xml">&#x1F4E1; Subscribe via RSS</a>
     </section>
   </main>
 
   <footer class="site-footer">
     <p>Built with plain HTML, CSS, and JavaScript for fast GitHub Pages hosting.</p>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem;"><a href="admin/index.html" style="color: rgba(15, 139, 141, 0.6); text-decoration: none;">Admin</a></p>
   </footer>
 
   <script src="assets/js/main.js"></script>

@@ -30,3 +30,8 @@ document.getElementById("url-clear")?.addEventListener("click", () => {
   urlOutput.value = "";
   setUrlStatus("Cleared.", false);
 });
+
+document.getElementById("url-copy")?.addEventListener("click", () => {
+  navigator.clipboard.writeText(urlOutput.value);
+  setUrlStatus("Copied!", false);
+});

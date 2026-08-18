@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Type Validator Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Check file MIME types and validate file signatures.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a class="brand" href="../../index.html">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="../index.html">Tools</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../index.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Tool</p>
+      <h1>File Type Validator</h1>
+      <p class="lead">Check file MIME types and validate file signatures locally.</p>
+    </section>
+
+    <section class="panel reveal">
+      <article class="tool-card">
+        <label for="file-input">Select File (or drag & drop)</label>
+        <div id="file-drop-zone" style="border: 2px dashed var(--line); border-radius: 6px; padding: 2rem; text-align: center; cursor: pointer; background: rgba(0, 102, 204, 0.02); margin: 0.5rem 0;">
+          <input type="file" id="file-input" style="display: none;" />
+          <p style="margin: 0; color: var(--ink); font-weight: 500;">Drag and drop a file here, or click to select</p>
+          <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Maximum file size: 50 MB</p>
+        </div>
+
+        <label for="file-name" style="margin-top: 1rem;">File Name</label>
+        <input type="text" id="file-name" readonly placeholder="Filename" />
+
+        <label for="file-size" style="margin-top: 1rem;">File Size</label>
+        <input type="text" id="file-size" readonly placeholder="0 bytes" />
+
+        <label for="file-type" style="margin-top: 1rem;">MIME Type</label>
+        <input type="text" id="file-type" readonly placeholder="application/octet-stream" />
+
+        <label for="file-signature" style="margin-top: 1rem;">File Signature (Hex)</label>
+        <input type="text" id="file-signature" readonly placeholder="First 8 bytes" />
+
+        <label for="file-validation" style="margin-top: 1rem;">Validation Result</label>
+        <textarea id="file-validation" readonly placeholder="Validation details"></textarea>
+
+        <p class="status" id="file-status" aria-live="polite"></p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">Back to tools</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="./tool.js"></script>
+</body>
+</html>

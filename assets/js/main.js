@@ -68,4 +68,129 @@
   }
 
   syncLatestPostCard();
+
+  function initSnailFollower() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .cursor-snail {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9999;
+        pointer-events: none;
+        user-select: none;
+        transform: translate(-100px, -100px);
+        will-change: transform;
+        font-size: 1.6rem;
+        line-height: 1;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+      }
+
+      .cursor-snail .snail-body {
+        display: inline-block;
+        transform-origin: 50% 60%;
+      }
+
+      .cursor-snail.is-eating .snail-body {
+        animation: snail-munch 220ms ease-in-out infinite;
+      }
+
+      .cursor-snail-crumb {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #7aa33a;
+        pointer-events: none;
+        z-index: 9998;
+        opacity: 0;
+        animation: snail-crumb-pop 280ms ease-out forwards;
+      }
+
+      @keyframes snail-munch {
+        0% { transform: scale(1, 1) rotate(0deg); }
+        50% { transform: scale(1.08, 0.92) rotate(-4deg); }
+        100% { transform: scale(1, 1) rotate(0deg); }
+      }
+
+      @keyframes snail-crumb-pop {
+        0% { opacity: 0.9; transform: scale(1) translateY(0); }
+        100% { opacity: 0; transform: scale(0.3) translateY(-8px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    const snail = document.createElement("div");
+    snail.className = "cursor-snail";
+    snail.innerHTML = '<span class="snail-body" aria-hidden="true">🐌</span>';
+    document.body.appendChild(snail);
+
+    const state = {
+      mouseX: window.innerWidth * 0.5,
+      mouseY: window.innerHeight * 0.5,
+      x: window.innerWidth * 0.5,
+      y: window.innerHeight * 0.5,
+      velocityX: 0,
+      velocityY: 0,
+      nextCrumbAt: 0
+    };
+
+    document.addEventListener("mousemove", (event) => {
+      state.mouseX = event.clientX;
+      state.mouseY = event.clientY;
+    }, { passive: true });
+
+    function emitCrumb(cx, cy) {
+      const crumb = document.createElement("span");
+      crumb.className = "cursor-snail-crumb";
+      crumb.style.left = (cx + (Math.random() * 8 - 4)) + "px";
+      crumb.style.top = (cy + (Math.random() * 8 - 4)) + "px";
+      document.body.appendChild(crumb);
+      setTimeout(() => crumb.remove(), 320);
+    }
+
+    function tick(now) {
+      const pull = 0.004;
+      const damping = 0.86;
+      const maxSpeed = 1.6;
+
+      const dx = state.mouseX - state.x;
+      const dy = state.mouseY - state.y;
+
+      state.velocityX = (state.velocityX + dx * pull) * damping;
+      state.velocityY = (state.velocityY + dy * pull) * damping;
+
+      const speed = Math.hypot(state.velocityX, state.velocityY);
+      if (speed > maxSpeed) {
+        const scale = maxSpeed / speed;
+        state.velocityX *= scale;
+        state.velocityY *= scale;
+      }
+
+      state.x += state.velocityX;
+      state.y += state.velocityY;
+
+      const faceScale = dx >= 0 ? 1 : -1;
+      const tilt = Math.max(-14, Math.min(14, dy * 0.08));
+      snail.style.transform = "translate(" + (state.x - 18) + "px, " + (state.y - 14) + "px) scaleX(" + faceScale + ") rotate(" + tilt + "deg)";
+
+      const distance = Math.hypot(dx, dy);
+      const isEating = distance < 16;
+      snail.classList.toggle("is-eating", isEating);
+      if (isEating && now >= state.nextCrumbAt) {
+        emitCrumb(state.mouseX - 2, state.mouseY - 2);
+        state.nextCrumbAt = now + 130;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  initSnailFollower();
 })();

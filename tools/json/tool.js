@@ -36,3 +36,8 @@ document.getElementById("json-clear")?.addEventListener("click", () => {
   jsonOutput.value = "";
   setJsonStatus("Cleared.", false);
 });
+
+document.getElementById("json-copy")?.addEventListener("click", () => {
+  navigator.clipboard.writeText(jsonOutput.value);
+  setJsonStatus("Copied!", false);
+});

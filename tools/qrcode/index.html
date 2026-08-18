@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator | GlennBeeckman.dev</title>
+  <meta name="description" content="Generate QR codes from text, URLs, vCards, and more.">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .qr-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 900px) { .qr-container { grid-template-columns: 1fr; } }
+    .input-group { margin-bottom: 1.5rem; }
+    .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 0.75rem; border: 2px solid var(--line); border-radius: 8px; font-size: 0.95rem; font-family: inherit; }
+    .input-group input:focus, .input-group textarea:focus, .input-group select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1); }
+    .input-group textarea { resize: vertical; min-height: 120px; }
+    .qr-output { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+    .qr-display { border: 2px solid var(--line); border-radius: 10px; padding: 1.5rem; background: white; min-height: 250px; display: flex; align-items: center; justify-content: center; }
+    .qr-display canvas, .qr-display img { max-width: 100%; max-height: 300px; }
+    .qr-controls { display: flex; gap: 0.75rem; flex-wrap: wrap; width: 100%; }
+    .btn { padding: 0.65rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-strong); transform: translateY(-1px); }
+    .btn-secondary { background: var(--line); color: var(--ink); }
+    .btn-secondary:hover { background: var(--accent); color: white; }
+    .option-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 500px) { .option-row { grid-template-columns: 1fr; } }
+    .color-input { display: flex; align-items: center; gap: 0.75rem; }
+    .color-input input[type="color"] { width: 60px; height: 40px; border: 2px solid var(--line); border-radius: 6px; cursor: pointer; }
+    .color-input input[type="text"] { flex: 1; }
+    .copy-status { display: none; padding: 0.75rem; background: rgba(0, 82, 204, 0.1); border-left: 3px solid var(--accent); border-radius: 4px; color: var(--text-light); text-align: center; }
+    .vcard-form { display: grid; gap: 1rem; }
+    .tab-buttons { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .tab-btn { padding: 0.65rem 1.2rem; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+    .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../../tools/index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Generator</p>
+      <h1>QR Code Generator</h1>
+      <p class="lead">Generate QR codes from text, URLs, vCards, and WiFi. Customize colors and download as PNG.</p>
+    </section>
+
+    <section class="panel reveal">
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="switchTab('text')">Text/URL</button>
+        <button class="tab-btn" onclick="switchTab('wifi')">WiFi</button>
+        <button class="tab-btn" onclick="switchTab('vcard')">vCard</button>
+      </div>
+
+      <div class="qr-container">
+        <!-- Input -->
+        <div>
+          <!-- Text Tab -->
+          <div id="text-tab" class="tab-content" style="display: block;">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Generate QR Code</h2>
+            
+            <div class="input-group">
+              <label for="qr-input">Text or URL:</label>
+              <textarea id="qr-input" placeholder="Enter text, URL, or any data...">https://glennbeeckman.dev</textarea>
+            </div>
+          </div>
+
+          <!-- WiFi Tab -->
+          <div id="wifi-tab" class="tab-content">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">WiFi QR Code</h2>
+            
+            <div class="input-group">
+              <label for="wifi-ssid">Network Name (SSID):</label>
+              <input type="text" id="wifi-ssid" placeholder="My WiFi Network">
+            </div>
+
+            <div class="input-group">
+              <label for="wifi-password">Password:</label>
+              <input type="password" id="wifi-password" placeholder="Network password">
+            </div>
+
+            <div class="input-group">
+              <label for="wifi-type">Security Type:</label>
+              <select id="wifi-type">
+                <option value="WPA">WPA/WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Open (No Password)</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label><input type="checkbox" id="wifi-hidden" > Hidden Network</label>
+            </div>
+          </div>
+
+          <!-- vCard Tab -->
+          <div id="vcard-tab" class="tab-content">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Contact vCard</h2>
+            
+            <div class="input-group">
+              <label for="vcard-name">Full Name:</label>
+              <input type="text" id="vcard-name" placeholder="John Doe">
+            </div>
+
+            <div class="option-row">
+              <div class="input-group">
+                <label for="vcard-phone">Phone:</label>
+                <input type="tel" id="vcard-phone" placeholder="+1 (555) 000-0000">
+              </div>
+
+              <div class="input-group">
+                <label for="vcard-email">Email:</label>
+                <input type="email" id="vcard-email" placeholder="john@example.com">
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="vcard-org">Organization:</label>
+              <input type="text" id="vcard-org" placeholder="Company Name">
+            </div>
+
+            <div class="input-group">
+              <label for="vcard-url">Website:</label>
+              <input type="url" id="vcard-url" placeholder="https://example.com">
+            </div>
+          </div>
+
+          <!-- Options -->
+          <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--line);">
+            <h3 style="font-size: 1rem; margin-bottom: 1rem;">Customize</h3>
+            
+            <div class="option-row">
+              <div class="input-group">
+                <label>QR Foreground:</label>
+                <div class="color-input">
+                  <input type="color" id="fg-color" value="#000000">
+                  <input type="text" id="fg-text" value="#000000" readonly style="font-family: 'Fira Code', monospace;">
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>QR Background:</label>
+                <div class="color-input">
+                  <input type="color" id="bg-color" value="#FFFFFF">
+                  <input type="text" id="bg-text" value="#FFFFFF" readonly style="font-family: 'Fira Code', monospace;">
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="error-level">Error Correction Level:</label>
+              <select id="error-level">
+                <option value="L">Low (7%)</option>
+                <option value="M" selected>Medium (15%)</option>
+                <option value="Q">Quartile (25%)</option>
+                <option value="H">High (30%)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div class="qr-output">
+          <h2 style="font-size: 1.2rem; margin-bottom: 0; width: 100%;">QR Code Preview</h2>
+          
+          <div class="qr-display" id="qr-display">
+            <div style="text-align: center; color: var(--text-light);">
+              <p>Enter text or data to generate QR code</p>
+            </div>
+          </div>
+
+          <div class="qr-controls">
+            <button class="btn btn-primary" onclick="generateQR()">Generate QR Code</button>
+            <button class="btn btn-secondary" onclick="downloadQR()">Download as PNG</button>
+            <button class="btn btn-secondary" onclick="copyQRData()">Copy Data</button>
+          </div>
+
+          <div id="copy-status" class="copy-status">Copied to clipboard!</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 82, 204, 0.05); border-radius: 8px;">
+        <h3 style="margin-top: 0;">About QR Codes</h3>
+        <p style="color: var(--text-light); margin: 0.5rem 0;">QR codes can store up to 4,296 characters of data. Use for:</p>
+        <ul style="color: var(--text-light); margin: 0.5rem 0;">
+          <li>URLs and website links</li>
+          <li>WiFi network sharing (works with most smartphones)</li>
+          <li>Contact information (vCard format)</li>
+          <li>Event details, product info, and more</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>QR code generator with support for text, URLs, WiFi, and vCards.</p>
+    <p><a href="../../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="tool.js"></script>
+</body>
+</html>

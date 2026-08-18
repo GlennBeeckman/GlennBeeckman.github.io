@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Tool | GlennBeeckman.dev</title>
-  <meta name="description" content="URL encode/decode utility.">
+  <title>XML Formatter Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Format and validate XML.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,23 +27,23 @@
   <main>
     <section class="hero reveal">
       <p class="kicker">Tool</p>
-      <h1>URL encode / decode</h1>
-      <p class="lead">Encode text for URL usage or decode URL-encoded values back to readable text.</p>
+      <h1>XML Formatter</h1>
+      <p class="lead">Format and validate XML syntax.</p>
     </section>
 
     <section class="panel reveal">
       <article class="tool-card">
-        <label for="url-input">Input</label>
-        <textarea id="url-input" placeholder="Paste URL or text"></textarea>
+        <label for="xml-input">XML Input</label>
+        <textarea id="xml-input" placeholder="&lt;root&gt;&lt;name&gt;John&lt;/name&gt;&lt;/root&gt;"></textarea>
         <div class="tool-actions">
-          <button type="button" id="url-encode">Encode</button>
-          <button type="button" id="url-decode">Decode</button>
-          <button type="button" id="url-clear" class="ghost">Clear</button>
+          <button type="button" id="xml-format">Format</button>
+          <button type="button" id="xml-validate">Validate</button>
+          <button type="button" id="xml-clear" class="ghost">Clear</button>
         </div>
-        <label for="url-output">Output</label>
-        <textarea id="url-output" readonly placeholder="Result"></textarea>
-        <button type="button" id="url-copy" class="ghost">Copy</button>
-        <p class="status" id="url-status" aria-live="polite"></p>
+        <label for="xml-output">Output</label>
+        <textarea id="xml-output" readonly placeholder="Result"></textarea>
+        <button type="button" id="xml-copy" class="ghost">Copy</button>
+        <p class="status" id="xml-status" aria-live="polite"></p>
       </article>
     </section>
   </main>

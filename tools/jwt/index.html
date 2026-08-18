@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Tool | GlennBeeckman.dev</title>
-  <meta name="description" content="URL encode/decode utility.">
+  <title>JWT Decoder Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Decode and inspect JSON Web Tokens.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,23 +27,31 @@
   <main>
     <section class="hero reveal">
       <p class="kicker">Tool</p>
-      <h1>URL encode / decode</h1>
-      <p class="lead">Encode text for URL usage or decode URL-encoded values back to readable text.</p>
+      <h1>JWT Decoder</h1>
+      <p class="lead">Decode and inspect JSON Web Tokens without verification.</p>
     </section>
 
     <section class="panel reveal">
       <article class="tool-card">
-        <label for="url-input">Input</label>
-        <textarea id="url-input" placeholder="Paste URL or text"></textarea>
+        <label for="jwt-input">JWT Token</label>
+        <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
         <div class="tool-actions">
-          <button type="button" id="url-encode">Encode</button>
-          <button type="button" id="url-decode">Decode</button>
-          <button type="button" id="url-clear" class="ghost">Clear</button>
+          <button type="button" id="jwt-decode">Decode</button>
+          <button type="button" id="jwt-clear" class="ghost">Clear</button>
         </div>
-        <label for="url-output">Output</label>
-        <textarea id="url-output" readonly placeholder="Result"></textarea>
-        <button type="button" id="url-copy" class="ghost">Copy</button>
-        <p class="status" id="url-status" aria-live="polite"></p>
+
+        <label for="jwt-header" style="margin-top: 1rem;">Header</label>
+        <textarea id="jwt-header" readonly placeholder="Header will appear here"></textarea>
+        <button type="button" id="jwt-header-copy" class="ghost">Copy</button>
+
+        <label for="jwt-payload" style="margin-top: 1rem;">Payload</label>
+        <textarea id="jwt-payload" readonly placeholder="Payload will appear here"></textarea>
+        <button type="button" id="jwt-payload-copy" class="ghost">Copy</button>
+
+        <label for="jwt-signature" style="margin-top: 1rem;">Signature (not verified)</label>
+        <input type="text" id="jwt-signature" readonly placeholder="Signature will appear here" />
+
+        <p class="status" id="jwt-status" aria-live="polite"></p>
       </article>
     </section>
   </main>

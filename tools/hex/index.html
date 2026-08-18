@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Tool | GlennBeeckman.dev</title>
-  <meta name="description" content="URL encode/decode utility.">
+  <title>Number Converter Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Convert between Decimal, Hex, Binary, and Octal.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,23 +27,32 @@
   <main>
     <section class="hero reveal">
       <p class="kicker">Tool</p>
-      <h1>URL encode / decode</h1>
-      <p class="lead">Encode text for URL usage or decode URL-encoded values back to readable text.</p>
+      <h1>Number Converter</h1>
+      <p class="lead">Convert between Decimal, Hexadecimal, Binary, and Octal.</p>
     </section>
 
     <section class="panel reveal">
       <article class="tool-card">
-        <label for="url-input">Input</label>
-        <textarea id="url-input" placeholder="Paste URL or text"></textarea>
-        <div class="tool-actions">
-          <button type="button" id="url-encode">Encode</button>
-          <button type="button" id="url-decode">Decode</button>
-          <button type="button" id="url-clear" class="ghost">Clear</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="decimal-input">Decimal</label>
+            <input type="number" id="decimal-input" placeholder="255" />
+          </div>
+          <div>
+            <label for="hex-input">Hexadecimal</label>
+            <input type="text" id="hex-input" placeholder="FF" />
+          </div>
+          <div>
+            <label for="binary-input">Binary</label>
+            <input type="text" id="binary-input" placeholder="11111111" />
+          </div>
+          <div>
+            <label for="octal-input">Octal</label>
+            <input type="text" id="octal-input" placeholder="377" />
+          </div>
         </div>
-        <label for="url-output">Output</label>
-        <textarea id="url-output" readonly placeholder="Result"></textarea>
-        <button type="button" id="url-copy" class="ghost">Copy</button>
-        <p class="status" id="url-status" aria-live="polite"></p>
+
+        <p class="status" id="number-status" aria-live="polite" style="margin-top: 1rem;"></p>
       </article>
     </section>
   </main>

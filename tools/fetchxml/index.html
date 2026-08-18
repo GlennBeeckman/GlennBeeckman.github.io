@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FetchXML Builder | GlennBeeckman.dev</title>
+  <meta name="description" content="Build FetchXML queries visually for Dataverse without writing code.">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .builder-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 1200px) { .builder-container { grid-template-columns: 1fr; } }
+    .builder-panel { background: rgba(0, 82, 204, 0.02); border: 1px solid var(--line); border-radius: 10px; padding: 1.5rem; }
+    .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--ink); }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 2px solid var(--line); border-radius: 6px; font-size: 0.95rem; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1); }
+    .btn { padding: 0.65rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-strong); transform: translateY(-1px); }
+    .btn-secondary { background: var(--line); color: var(--ink); }
+    .btn-secondary:hover { background: var(--accent); color: white; }
+    .output-box { background: #f0f4f9; border: 1px solid var(--line); border-radius: 8px; padding: 1.5rem; }
+    .output-box textarea { background: white; font-family: "Fira Code", monospace; font-size: 0.85rem; min-height: 300px; }
+    .filter-item { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 1rem; margin-bottom: 0.75rem; }
+    .filter-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .filter-item .btn-secondary { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    .attribute-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; }
+    .attribute-btn { padding: 0.5rem 0.75rem; border: 1px solid var(--line); background: var(--card); border-radius: 6px; cursor: pointer; text-align: left; transition: all 0.2s; }
+    .attribute-btn:hover { border-color: var(--accent); background: rgba(0, 82, 204, 0.05); }
+    .quick-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../../tools/index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Query Builder</p>
+      <h1>FetchXML Builder</h1>
+      <p class="lead">Create FetchXML queries visually without writing code. Perfect for OData, Web API, and Dataverse queries.</p>
+    </section>
+
+    <section class="panel reveal">
+      <div class="builder-container">
+        <!-- Left Panel: Query Builder -->
+        <div class="builder-panel">
+          <h2 class="section-title">Build Your Query</h2>
+
+          <div class="form-group">
+            <label for="entity-select">Entity (Table):</label>
+            <select id="entity-select">
+              <option value="">-- Select Entity --</option>
+              <option value="accounts">Accounts</option>
+              <option value="contacts">Contacts</option>
+              <option value="leads">Leads</option>
+              <option value="opportunities">Opportunities</option>
+              <option value="cases">Cases</option>
+              <option value="products">Products</option>
+              <option value="quotes">Quotes</option>
+              <option value="users">Users</option>
+              <option value="teams">Teams</option>
+              <option value="systemusers">System Users</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Columns to Retrieve:</label>
+            <div class="attribute-grid" id="columns-grid">
+              <button class="attribute-btn" onclick="toggleColumn(this, 'name')">name</button>
+              <button class="attribute-btn" onclick="toggleColumn(this, 'accountid')">accountid</button>
+              <button class="attribute-btn" onclick="toggleColumn(this, 'createdon')">createdon</button>
+              <button class="attribute-btn" onclick="toggleColumn(this, 'ownerid')">ownerid</button>
+              <button class="attribute-btn" onclick="toggleColumn(this, 'statuscode')">statuscode</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Filters/Conditions:</label>
+            <div id="filters-container"></div>
+            <button class="btn btn-secondary" onclick="addFilter()">+ Add Filter</button>
+          </div>
+
+          <div class="form-group">
+            <label for="order-by">Order By:</label>
+            <input type="text" id="order-by" placeholder="e.g., name asc, createdon desc">
+          </div>
+
+          <div class="form-group">
+            <label for="page-size">Page Size (max 5000):</label>
+            <input type="number" id="page-size" value="500" min="1" max="5000">
+          </div>
+
+          <div class="quick-actions">
+            <button class="btn btn-primary" onclick="generateFetchXml()">Generate FetchXML</button>
+            <button class="btn btn-secondary" onclick="generateOData()">Generate OData</button>
+            <button class="btn btn-secondary" onclick="clearBuilder()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Right Panel: Output -->
+        <div class="builder-panel">
+          <h2 class="section-title">Generated Query</h2>
+          
+          <div class="output-box">
+            <textarea id="query-output" readonly placeholder="Query will appear here..."></textarea>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <button class="btn btn-primary" onclick="copyQuery()">Copy to Clipboard</button>
+            <button class="btn btn-secondary" onclick="downloadQuery()">Download</button>
+          </div>
+
+          <div id="copy-status" style="margin-top: 1rem; padding: 0.75rem; background: rgba(0, 82, 204, 0.05); border-radius: 6px; text-align: center; display: none; color: var(--text-light);">Copied to clipboard!</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0, 82, 204, 0.05); border-radius: 8px;">
+        <h3 style="margin-top: 0;">Quick Reference</h3>
+        <p style="color: var(--text-light); margin: 0.5rem 0;"><strong>Operators:</strong> eq (equals), ne (not equals), gt (greater than), lt (less than), like (contains), begins with</p>
+        <p style="color: var(--text-light); margin: 0.5rem 0;"><strong>Logical:</strong> and, or - combine multiple conditions</p>
+        <p style="color: var(--text-light); margin: 0;"><strong>Use this with:</strong> OData Query Builder, Power Automate, Canvas Apps, and Dataverse plugins</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>FetchXML Builder generates standard Dataverse query syntax compatible with Web API and OData.</p>
+    <p><a href="../../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="tool.js"></script>
+</body>
+</html>

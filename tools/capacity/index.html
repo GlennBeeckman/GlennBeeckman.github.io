@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacity Calculator | GlennBeeckman.dev</title>
+  <meta name="description" content="Estimate Dataverse storage capacity and resource usage.">
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <style>
+    .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 900px) { .calculator-grid { grid-template-columns: 1fr; } }
+    .input-group { margin-bottom: 1.5rem; }
+    .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    .input-group input { width: 100%; padding: 0.75rem; border: 2px solid var(--line); border-radius: 8px; font-size: 1rem; }
+    .input-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1); }
+    .input-help { font-size: 0.85rem; color: var(--text-light); margin-top: 0.35rem; font-style: italic; }
+    .result-box { background: rgba(0, 82, 204, 0.05); border: 2px solid var(--accent); border-radius: 10px; padding: 1.5rem; margin-top: 1rem; }
+    .result-line { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--line); }
+    .result-line:last-child { border-bottom: none; }
+    .result-label { font-weight: 500; color: var(--text-light); }
+    .result-value { font-weight: 700; color: var(--ink); font-size: 1.1rem; font-family: "Fira Code", monospace; }
+    .warning { background: rgba(234, 179, 8, 0.1); border-left: 4px solid #eab308; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 0.95rem; }
+    .good { color: #15803d; }
+    .warning-text { color: #ca8a04; }
+    .danger { color: #dc2626; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--line); }
+    .tab { padding: 1rem; border: none; background: none; cursor: pointer; font-weight: 500; border-bottom: 3px solid transparent; color: var(--text-light); transition: all 0.2s; }
+    .tab:hover { color: var(--ink); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../../tools/index.html">Tools</a>
+      <a href="../../snippets/index.html">Snippets</a>
+      <a href="../../resources/index.html">Resources</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <p class="kicker">Planning Tool</p>
+      <h1>Dataverse Capacity Calculator</h1>
+      <p class="lead">Estimate storage usage, API limits, and resource requirements. Plan your Dataverse implementation confidently.</p>
+    </section>
+
+    <section class="panel reveal">
+      <div class="tabs">
+        <button class="tab active" data-tab="storage">Storage Calculator</button>
+        <button class="tab" data-tab="api">API Rate Limits</button>
+        <button class="tab" data-tab="growth">Growth Projector</button>
+      </div>
+
+      <!-- Storage Calculator Tab -->
+      <div id="storage" class="tab-content active">
+        <h2>Storage Usage Estimator</h2>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Estimate how much Dataverse storage your environment will use.</p>
+
+        <div class="calculator-grid">
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Input Data</h3>
+            
+            <div class="input-group">
+              <label for="records-count">Estimated Total Records:</label>
+              <input type="number" id="records-count" value="100000" min="0" step="1000">
+              <div class="input-help">Total records across all tables</div>
+            </div>
+
+            <div class="input-group">
+              <label for="avg-text">Avg Text Fields (KB):</label>
+              <input type="number" id="avg-text" value="2" min="0" step="0.1">
+              <div class="input-help">Average text field size per record</div>
+            </div>
+
+            <div class="input-group">
+              <label for="avg-note">Avg Note Fields (KB):</label>
+              <input type="number" id="avg-note" value="5" min="0" step="0.1">
+              <div class="input-help">Average note/memo size per record</div>
+            </div>
+
+            <div class="input-group">
+              <label for="attachments">Avg Attachments per Record (KB):</label>
+              <input type="number" id="attachments" value="50" min="0" step="10">
+              <div class="input-help">Average attachment size, 0 if none</div>
+            </div>
+
+            <div class="input-group">
+              <label for="audit-years">Audit History (Years):</label>
+              <input type="number" id="audit-years" value="3" min="0" max="10" step="1">
+              <div class="input-help">Years to retain audit records</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Estimated Usage</h3>
+            <div class="result-box">
+              <div class="result-line">
+                <span class="result-label">Data Storage:</span>
+                <span class="result-value" id="data-storage">0 GB</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Audit Storage:</span>
+                <span class="result-value" id="audit-storage">0 GB</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Attachments:</span>
+                <span class="result-value" id="attachment-storage">0 GB</span>
+              </div>
+              <div class="result-line" style="border-bottom: 2px solid var(--accent); margin-top: 0.5rem; padding-top: 1rem;">
+                <span class="result-label" style="font-size: 1.1rem;">Total Storage:</span>
+                <span class="result-value" id="total-storage" style="font-size: 1.3rem;">0 GB</span>
+              </div>
+              <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.02); border-radius: 6px; text-align: center;">
+                <div style="color: var(--text-light); font-size: 0.9rem;">Licensing Impact</div>
+                <div id="storage-status" style="font-weight: 600; color: var(--accent); margin-top: 0.35rem;"></div>
+              </div>
+            </div>
+
+            <div id="storage-warning" class="warning" style="display: none;">
+              <strong>⚠ Caution:</strong> <span id="warning-text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Rate Limits Tab -->
+      <div id="api" class="tab-content">
+        <h2>API Rate Limits & Throttling</h2>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Understand API request limits and throttling thresholds.</p>
+
+        <div class="calculator-grid">
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Request Profile</h3>
+
+            <div class="input-group">
+              <label for="concurrent-users">Concurrent Users:</label>
+              <input type="number" id="concurrent-users" value="50" min="1" step="5">
+              <div class="input-help">Expected simultaneous users</div>
+            </div>
+
+            <div class="input-group">
+              <label for="requests-per-min">Requests per User/Min:</label>
+              <input type="number" id="requests-per-min" value="10" min="1" step="1">
+              <div class="input-help">Average API calls per minute per user</div>
+            </div>
+
+            <div class="input-group">
+              <label for="bulk-batch">Bulk Batch Size:</label>
+              <input type="number" id="bulk-batch" value="500" min="1" max="1000" step="100">
+              <div class="input-help">Records per batch operation (max 1000)</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Limits & Thresholds</h3>
+            <div class="result-box">
+              <div class="result-line">
+                <span class="result-label">Requests/Min:</span>
+                <span class="result-value" id="req-per-min">0</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Throttle Threshold (6000/min):</span>
+                <span class="result-value" id="throttle-percent">0%</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Throttle Risk:</span>
+                <span class="result-value" id="throttle-status" class="good">✓ Safe</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Recommended Max Users:</span>
+                <span class="result-value" id="max-safe-users">∞</span>
+              </div>
+            </div>
+
+            <div id="api-warning" class="warning" style="display: none;">
+              <strong>⚠ Alert:</strong> <span id="api-warning-text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Projector Tab -->
+      <div id="growth" class="tab-content">
+        <h2>Data Growth Projection</h2>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Project how storage needs will grow over time.</p>
+
+        <div class="calculator-grid">
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Growth Assumptions</h3>
+
+            <div class="input-group">
+              <label for="initial-records">Initial Records:</label>
+              <input type="number" id="initial-records" value="10000" min="0" step="1000">
+            </div>
+
+            <div class="input-group">
+              <label for="monthly-growth">Monthly Growth Rate (%):</label>
+              <input type="number" id="monthly-growth" value="10" min="0" step="1">
+              <div class="input-help">Percentage increase per month</div>
+            </div>
+
+            <div class="input-group">
+              <label for="avg-record-size">Avg Record Size (KB):</label>
+              <input type="number" id="avg-record-size" value="10" min="0.1" step="0.5">
+            </div>
+
+            <div class="input-group">
+              <label for="projection-months">Project (Months):</label>
+              <input type="number" id="projection-months" value="12" min="1" max="60" step="1">
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Projections</h3>
+            <div class="result-box">
+              <div class="result-line">
+                <span class="result-label">Starting Storage:</span>
+                <span class="result-value" id="start-storage">0 GB</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Projected in <span id="proj-months">12</span> months:</span>
+                <span class="result-value" id="end-storage">0 GB</span>
+              </div>
+              <div class="result-line">
+                <span class="result-label">Growth:</span>
+                <span class="result-value" id="growth-amount">0 GB</span>
+              </div>
+              <div class="result-line" style="border-top: 2px solid var(--accent); margin-top: 0.5rem; padding-top: 1rem;">
+                <span class="result-label">Avg/Month:</span>
+                <span class="result-value" id="avg-growth-month">0 GB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Capacity estimates based on standard Dataverse defaults. Actual usage may vary.</p>
+    <p><a href="../../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script src="tool.js"></script>
+</body>
+</html>

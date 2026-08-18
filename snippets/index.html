@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Snippets | GlennBeeckman.dev</title>
+  <meta name="description" content="Reusable Power Fx formulas, Power Automate patterns, and common Power Platform code snippets.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    .snippets-toolbar { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin:2rem 0 1.5rem; }
+    .snippets-toolbar input[type="search"] { flex:1; min-width:200px; padding:.6rem 1rem; border:1px solid var(--line); border-radius:6px; font-family:"Space Grotesk",sans-serif; font-size:.95rem; background:var(--card); color:var(--ink); }
+    .snippets-toolbar input[type="search"]:focus { outline:none; border-color:var(--accent); }
+    .filter-chips { display:flex; gap:.5rem; flex-wrap:wrap; }
+    .chip { padding:.35rem .85rem; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:.8rem; font-weight:500; cursor:pointer; transition:all .15s ease; font-family:"Space Grotesk",sans-serif; }
+    .chip:hover,.chip.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .snippet-count { font-size:.9rem; color:#666; margin-bottom:1.5rem; }
+    .snippet-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1.5rem; margin:0 0 3rem; }
+    .snippet-card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:1.5rem; box-shadow:var(--shadow); display:flex; flex-direction:column; }
+    .snippet-card:hover { border-color:var(--accent); box-shadow:0 20px 40px rgba(0,102,204,.15); }
+    .snippet-meta { display:flex; gap:.5rem; margin-bottom:.75rem; flex-wrap:wrap; }
+    .snippet-category { background:rgba(0,102,204,.1); color:var(--accent-strong); padding:.2rem .6rem; border-radius:999px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .snippet-difficulty { background:rgba(26,58,74,.07); color:var(--ink); padding:.2rem .6rem; border-radius:999px; font-size:.72rem; font-weight:500; }
+    .snippet-card h3 { margin:0 0 .5rem; color:var(--ink); font-size:1.05rem; }
+    .snippet-desc { font-size:.9rem; color:#555; margin:0 0 .75rem; flex:1; }
+    .snippet-code-wrap { position:relative; }
+    .snippet-card pre { background:#f0f4f9; padding:1rem; border-radius:6px; overflow-x:auto; margin:0; }
+    .snippet-card code { font-family:"IBM Plex Mono",monospace; font-size:.82rem; line-height:1.6; color:#2d3748; }
+    .copy-btn { position:absolute; top:.5rem; right:.5rem; background:var(--accent); color:#fff; border:none; border-radius:4px; padding:.25rem .65rem; font-size:.75rem; font-weight:600; cursor:pointer; font-family:"Space Grotesk",sans-serif; transition:background .15s ease; }
+    .copy-btn:hover { background:var(--accent-strong); }
+    .copy-btn.copied { background:#15803d; }
+    .snippet-tags { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.75rem; }
+    .snippet-tag { font-size:.72rem; color:#777; background:#f0f4f9; padding:.15rem .5rem; border-radius:4px; }
+    .no-results { grid-column:1/-1; text-align:center; padding:3rem; color:#666; }
+    .suggest-section { background:rgba(0,102,204,.04); border:1px solid rgba(0,102,204,.15); border-radius:8px; padding:2rem; margin:2rem 0 3rem; }
+    .suggest-section h2 { margin-top:0; }
+    .suggest-form { display:grid; gap:1rem; margin-top:1.5rem; }
+    .suggest-form .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    @media(max-width:600px){.suggest-form .form-row{grid-template-columns:1fr;}}
+    .suggest-form label { display:block; font-weight:600; font-size:.9rem; margin-bottom:.35rem; }
+    .suggest-form input,.suggest-form select,.suggest-form textarea { width:100%; padding:.65rem .9rem; border:1px solid var(--line); border-radius:6px; font-family:"Space Grotesk",sans-serif; font-size:.9rem; background:var(--card); color:var(--ink); box-sizing:border-box; }
+    .suggest-form textarea { font-family:"IBM Plex Mono",monospace; font-size:.85rem; resize:vertical; }
+    .suggest-form input:focus,.suggest-form select:focus,.suggest-form textarea:focus { outline:none; border-color:var(--accent); }
+    .suggest-form button[type="submit"] { background:var(--accent); color:#fff; border:none; border-radius:6px; padding:.75rem 1.75rem; font-family:"Space Grotesk",sans-serif; font-size:.95rem; font-weight:600; cursor:pointer; transition:background .15s ease; }
+    .suggest-form button[type="submit"]:hover { background:var(--accent-strong); }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <a href="../index.html" class="brand"><span class="brand-dot"></span>GlennBeeckman.dev</a>
+    <nav>
+      <a href="../tools/index.html">Tools</a>
+      <a href="../snippets/index.html" aria-current="page">Snippets</a>
+      <a href="../resources/index.html">Resources</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../search/index.html">Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="kicker">Code Library</p>
+      <h1>Power Platform Snippets</h1>
+      <p class="subtitle">Reusable formulas, patterns, and solutions. Click any snippet to copy it instantly.</p>
+    </section>
+
+    <div class="snippets-toolbar">
+      <input type="search" id="snippet-search" placeholder="Search snippets&#x2026;" aria-label="Search snippets">
+      <div class="filter-chips" id="filter-chips">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="Power Fx">Power Fx</button>
+        <button class="chip" data-filter="Canvas App">Canvas App</button>
+        <button class="chip" data-filter="Power Automate">Power Automate</button>
+        <button class="chip" data-filter="Beginner">Beginner</button>
+        <button class="chip" data-filter="Intermediate">Intermediate</button>
+        <button class="chip" data-filter="Advanced">Advanced</button>
+      </div>
+    </div>
+
+    <p class="snippet-count" id="snippet-count"></p>
+    <div class="snippet-grid" id="snippet-grid">
+      <p style="grid-column:1/-1;text-align:center;color:#666;padding:2rem;">Loading snippets&#x2026;</p>
+    </div>
+
+    <section class="suggest-section">
+      <h2>Suggest a Snippet</h2>
+      <p>Have a useful Power Platform formula or pattern? Submit it and I will add it to the library.</p>
+      <form class="suggest-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="suggest-form">
+        <div class="form-row">
+          <div>
+            <label for="suggest-title">Snippet Title</label>
+            <input type="text" id="suggest-title" name="title" placeholder="E.g., Filter by User Email" required>
+          </div>
+          <div>
+            <label for="suggest-category">Category</label>
+            <select id="suggest-category" name="category" required>
+              <option value="">Select a category&#x2026;</option>
+              <option value="Power Fx">Power Fx</option>
+              <option value="Canvas App">Canvas App</option>
+              <option value="Power Automate">Power Automate</option>
+              <option value="Dataverse">Dataverse</option>
+              <option value="Model-Driven App">Model-Driven App</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="suggest-description">What does it do?</label>
+          <input type="text" id="suggest-description" name="description" placeholder="Short description of the snippet" required>
+        </div>
+        <div>
+          <label for="suggest-code">Code</label>
+          <textarea id="suggest-code" name="code" rows="6" placeholder="Paste your snippet here&#x2026;" required></textarea>
+        </div>
+        <div>
+          <label for="suggest-email">Your email (optional, for credit)</label>
+          <input type="email" id="suggest-email" name="email" placeholder="you@example.com">
+        </div>
+        <div id="suggest-status" style="display:none;"></div>
+        <button type="submit">Submit Snippet</button>
+      </form>
+      <p style="margin-top:1rem;font-size:.85rem;color:#888;">To activate form submissions, create a free account at <a href="https://formspree.io" target="_blank" rel="noopener">formspree.io</a>, create a new form, and replace <code>YOUR_FORM_ID</code> in this file with your form ID.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Built with plain HTML, CSS, and JavaScript for fast GitHub Pages hosting.</p>
+    <p><a href="../admin/index.html">Admin</a></p>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let allSnippets = [];
+    let activeFilter = "all";
+    let searchQuery = "";
+
+    // Snippets data
+    const snippetsData = [
+  {
+    "id": "format-date",
+    "title": "Format Date for Display",
+    "category": "Power Fx",
+    "difficulty": "Beginner",
+    "description": "Convert a date to readable format with locale support.",
+    "tags": ["date", "text", "format", "today"],
+    "code": "Text(Today(), \"mmmm dd, yyyy\")\n// Result: June 11, 2026"
+  },
+  {
+    "id": "filter-multiple",
+    "title": "Filter with Multiple Conditions",
+    "category": "Power Fx",
+    "difficulty": "Intermediate",
+    "description": "Chain multiple filter conditions for precise data retrieval.",
+    "tags": ["filter", "dataverse", "gallery", "conditions"],
+    "code": "Filter(Contacts,\n  Status = \"Active\",\n  Email <> \"\",\n  Department = SelectedDepartment.Value\n)"
+  },
+  {
+    "id": "form-validation",
+    "title": "Form Validation on Submit",
+    "category": "Canvas App",
+    "difficulty": "Intermediate",
+    "description": "Validate required fields before form submission.",
+    "tags": ["form", "validation", "notify", "submit"],
+    "code": "If(\n  Email_Input.Value = \"\",\n  Notify(\"Email is required\", NotificationType.Error),\n  SubmitForm(MyForm)\n)"
+  },
+  {
+    "id": "http-json-response",
+    "title": "HTTP JSON Response",
+    "category": "Power Automate",
+    "difficulty": "Beginner",
+    "description": "Extract and work with JSON responses from HTTP calls.",
+    "tags": ["http", "json", "parse", "response", "flow"],
+    "code": "Parse JSON output:\n@body('HTTP_request')?['value']\n\nFor arrays:\n@item()['fieldName']"
+  },
+  {
+    "id": "lookup-fallback",
+    "title": "Lookup with Fallback Value",
+    "category": "Power Fx",
+    "difficulty": "Advanced",
+    "description": "Safely lookup related records with error handling.",
+    "tags": ["lookup", "iferror", "fallback", "error handling"],
+    "code": "IfError(\n  LookUp(Accounts, ID = AccountID).Name,\n  \"Account not found\"\n)"
+  },
+  {
+    "id": "dynamic-visibility",
+    "title": "Dynamic Column Visibility",
+    "category": "Canvas App",
+    "difficulty": "Advanced",
+    "description": "Show/hide columns based on user role or permission.",
+    "tags": ["visible", "role", "user", "permission", "conditional"],
+    "code": "If(\n  User().Email = \"admin@company.com\",\n  true,\n  false\n)\n// Use result in column's Visible property"
+  },
+  {
+    "id": "patch-single-record",
+    "title": "Patch a Single Record",
+    "category": "Power Fx",
+    "difficulty": "Beginner",
+    "description": "Create or update a single Dataverse record without using a form.",
+    "tags": ["patch", "create", "update", "dataverse", "record"],
+    "code": "Patch(\n  Contacts,\n  Defaults(Contacts),\n  {\n    FirstName: \"Glenn\",\n    LastName: \"Beeckman\",\n    Email: \"glenn@example.com\"\n  }\n)"
+  },
+  {
+    "id": "collect-clear",
+    "title": "Collect and Clear Collections",
+    "category": "Power Fx",
+    "difficulty": "Beginner",
+    "description": "Add records to a local collection and clear it when needed.",
+    "tags": ["collect", "clearcollect", "clear", "collection", "local"],
+    "code": "// Add to collection\nCollect(MyCollection, { Name: \"Item\", Value: 42 })\n\n// Replace entire collection\nClearCollect(MyCollection, Filter(Products, Active = true))\n\n// Clear the collection\nClear(MyCollection)"
+  },
+  {
+    "id": "navigate-context",
+    "title": "Navigate with Context",
+    "category": "Canvas App",
+    "difficulty": "Intermediate",
+    "description": "Pass data between screens using navigation context.",
+    "tags": ["navigate", "context", "screen", "parameter"],
+    "code": "// Navigate and pass data\nNavigate(\n  ScreenDetail,\n  ScreenTransition.Fade,\n  { SelectedRecord: Gallery.Selected }\n)\n\n// Receive on target screen\n// Access via: SelectedRecord.FieldName"
+  },
+  {
+    "id": "odata-filter-date",
+    "title": "OData Filter by Date Range",
+    "category": "Power Automate",
+    "difficulty": "Intermediate",
+    "description": "Filter Dataverse records by date range in an OData query.",
+    "tags": ["odata", "filter", "date", "dataverse", "list records"],
+    "code": "createdon ge @{addDays(utcNow(), -30)} and createdon le @{utcNow()}\n\n// Or using ISO format:\ncreatedon ge 2026-01-01T00:00:00Z"
+  },
+  {
+    "id": "concurrent",
+    "title": "Concurrent for Parallel Calls",
+    "category": "Power Fx",
+    "difficulty": "Advanced",
+    "description": "Run multiple data calls in parallel to speed up app loading.",
+    "tags": ["concurrent", "performance", "parallel", "load", "onstart"],
+    "code": "// In App.OnStart or Screen.OnVisible\nConcurrent(\n  ClearCollect(Accounts, Accounts),\n  ClearCollect(Contacts, Contacts),\n  ClearCollect(Products, Products)\n)\n// Loads all 3 simultaneously instead of sequentially"
+  },
+  {
+    "id": "send-email-flow",
+    "title": "Send Email from Power Automate",
+    "category": "Power Automate",
+    "difficulty": "Beginner",
+    "description": "Send a formatted HTML email using Office 365 connector.",
+    "tags": ["email", "office 365", "send", "html", "notification"],
+    "code": "// Action: Send an email (V2)\nTo: @{triggerBody()?['email']}\nSubject: New submission from @{triggerBody()?['name']}\nBody:\n<h2>New Request</h2>\n<p><strong>Name:</strong> @{triggerBody()?['name']}</p>\n<p><strong>Message:</strong> @{triggerBody()?['message']}</p>"
+  }
+    ];
+
+    function loadSnippets() {
+      allSnippets = snippetsData;
+      renderSnippets();
+    }
+
+    function renderSnippets() {
+      const query = searchQuery.toLowerCase();
+      const filtered = allSnippets.filter(s => {
+        const matchesFilter = activeFilter === "all" || s.category === activeFilter || s.difficulty === activeFilter;
+        const matchesSearch = !query || s.title.toLowerCase().includes(query) || s.description.toLowerCase().includes(query) || s.tags.some(t => t.toLowerCase().includes(query)) || s.code.toLowerCase().includes(query);
+        return matchesFilter && matchesSearch;
+      });
+
+      document.getElementById("snippet-count").textContent = "Showing " + filtered.length + " of " + allSnippets.length + " snippets";
+
+      const grid = document.getElementById("snippet-grid");
+      if (filtered.length === 0) {
+        grid.innerHTML = "<div class='no-results'><p>No snippets match your search.</p><p style='font-size:.9rem;color:#999;'>Try a different keyword or filter.</p></div>";
+        return;
+      }
+
+      grid.innerHTML = filtered.map(s =>
+        "<article class='snippet-card'>" +
+        "<div class='snippet-meta'><span class='snippet-category'>" + s.category + "</span><span class='snippet-difficulty'>" + s.difficulty + "</span></div>" +
+        "<h3>" + s.title + "</h3>" +
+        "<p class='snippet-desc'>" + s.description + "</p>" +
+        "<div class='snippet-code-wrap'>" +
+        "<pre><code id='code-" + s.id + "'>" + escapeHtml(s.code) + "</code></pre>" +
+        "<button class='copy-btn' onclick='copySnippet(\"" + s.id + "\",this)'>Copy</button>" +
+        "</div>" +
+        "<div class='snippet-tags'>" + s.tags.map(t => "<span class='snippet-tag'>" + t + "</span>").join("") + "</div>" +
+        "</article>"
+      ).join("");
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function copySnippet(id, btn) {
+      const snippet = allSnippets.find(s => s.id === id);
+      if (!snippet) return;
+      navigator.clipboard.writeText(snippet.code).then(() => {
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2000);
+      });
+    }
+
+    document.getElementById("filter-chips").addEventListener("click", e => {
+      if (!e.target.classList.contains("chip")) return;
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      e.target.classList.add("active");
+      activeFilter = e.target.dataset.filter;
+      renderSnippets();
+    });
+
+    document.getElementById("snippet-search").addEventListener("input", e => {
+      searchQuery = e.target.value;
+      renderSnippets();
+    });
+
+    document.getElementById("suggest-form").addEventListener("submit", async e => {
+      e.preventDefault();
+      const form = e.target;
+      const status = document.getElementById("suggest-status");
+      status.style.display = "block";
+      status.innerHTML = "<p style='color:#0066cc;'>Sending&#x2026;</p>";
+      try {
+        const res = await fetch(form.action, { method:"POST", body:new FormData(form), headers:{Accept:"application/json"} });
+        if (res.ok) {
+          status.innerHTML = "<p style='color:#15803d;font-weight:600;'>Thanks! I will review your snippet and add it to the library.</p>";
+          form.reset();
+        } else {
+          status.innerHTML = "<p style='color:#9b1c1c;'>Could not send. Please set up your Formspree form ID first.</p>";
+        }
+      } catch { status.innerHTML = "<p style='color:#9b1c1c;'>Network error. Please try again later.</p>"; }
+    });
+
+    loadSnippets();
+  </script>
+</body>
+</html>

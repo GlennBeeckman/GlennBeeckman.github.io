@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Tool | GlennBeeckman.dev</title>
-  <meta name="description" content="URL encode/decode utility.">
+  <title>Markdown to HTML Tool | GlennBeeckman.dev</title>
+  <meta name="description" content="Convert Markdown to HTML instantly.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,23 +27,23 @@
   <main>
     <section class="hero reveal">
       <p class="kicker">Tool</p>
-      <h1>URL encode / decode</h1>
-      <p class="lead">Encode text for URL usage or decode URL-encoded values back to readable text.</p>
+      <h1>Markdown ↔ HTML</h1>
+      <p class="lead">Convert between Markdown and HTML formats.</p>
     </section>
 
     <section class="panel reveal">
       <article class="tool-card">
-        <label for="url-input">Input</label>
-        <textarea id="url-input" placeholder="Paste URL or text"></textarea>
+        <h3>Markdown to HTML</h3>
+        <label for="md-input">Markdown</label>
+        <textarea id="md-input" placeholder="# Heading&#10;&#10;**Bold** text&#10;&#10;- List item"></textarea>
         <div class="tool-actions">
-          <button type="button" id="url-encode">Encode</button>
-          <button type="button" id="url-decode">Decode</button>
-          <button type="button" id="url-clear" class="ghost">Clear</button>
+          <button type="button" id="md-to-html">Convert</button>
+          <button type="button" id="md-clear" class="ghost">Clear</button>
         </div>
-        <label for="url-output">Output</label>
-        <textarea id="url-output" readonly placeholder="Result"></textarea>
-        <button type="button" id="url-copy" class="ghost">Copy</button>
-        <p class="status" id="url-status" aria-live="polite"></p>
+        <label for="html-output">HTML</label>
+        <textarea id="html-output" readonly placeholder="Result"></textarea>
+        <button type="button" id="html-copy" class="ghost">Copy</button>
+        <p class="status" id="md-status" aria-live="polite"></p>
       </article>
     </section>
   </main>

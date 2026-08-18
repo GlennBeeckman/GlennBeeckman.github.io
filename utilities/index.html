@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Platform Utilities | GlennBeeckman.dev</title>
+  <meta name="description" content="Power Platform-specific utilities: formula builder, JSON validator, expression tester, and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header class="site-header">
+    <a href="../index.html" class="brand">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="../tools/index.html">Tools</a>
+      <a href="../snippets/index.html">Snippets</a>
+      <a href="../resources/index.html">Resources</a>
+      <a href="../utilities/index.html" aria-current="page">Utilities</a>
+      <a href="../blog/index.html">Blog</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="kicker">Power Platform Toolkit</p>
+      <h1>Developer Utilities</h1>
+      <p class="subtitle">Specialized tools for Power Platform development, testing, and troubleshooting.</p>
+    </section>
+
+    <section class="utility-grid">
+      <article class="utility-card">
+        <div class="utility-icon">📐</div>
+        <h3>JSON Schema Generator</h3>
+        <p>Convert sample JSON data to schema format for Power Automate HTTP connectors.</p>
+        <a href="#json-schema" class="utility-btn">Open Tool</a>
+      </article>
+
+      <article class="utility-card">
+        <div class="utility-icon">⚙️</div>
+        <h3>Power Fx Expression Validator</h3>
+        <p>Test Power Fx syntax and formula structure (syntax checking only).</p>
+        <a href="#fx-validator" class="utility-btn">Open Tool</a>
+      </article>
+
+      <article class="utility-card">
+        <div class="utility-icon">🔍</div>
+        <h3>Regex Tester</h3>
+        <p>Test regular expressions for use in Power Fx and Power Automate validation.</p>
+        <a href="#regex-tester" class="utility-btn">Open Tool</a>
+      </article>
+
+      <article class="utility-card">
+        <div class="utility-icon">🔄</div>
+        <h3>GUID Generator</h3>
+        <p>Generate GUIDs for Dataverse records and Power Platform components.</p>
+        <a href="#guid-gen" class="utility-btn">Open Tool</a>
+      </article>
+
+      <article class="utility-card">
+        <div class="utility-icon">⏱️</div>
+        <h3>Unix Timestamp Converter</h3>
+        <p>Convert between Unix timestamps and human-readable dates.</p>
+        <a href="#timestamp" class="utility-btn">Open Tool</a>
+      </article>
+
+      <article class="utility-card">
+        <div class="utility-icon">🎯</div>
+        <h3>Dataverse Field Type Reference</h3>
+        <p>Quick reference for Dataverse field types, formats, and Power Fx equivalents.</p>
+        <a href="#field-types" class="utility-btn">View Reference</a>
+      </article>
+    </section>
+
+    <section id="json-schema" class="utility-tool">
+      <h2>JSON Schema Generator</h2>
+      <p>Paste sample JSON data and generate the schema format needed for Power Automate's "Parse JSON" action.</p>
+      
+      <div class="tool-section">
+        <label for="json-input">Sample JSON Data:</label>
+        <textarea id="json-input" placeholder='{"name": "John", "email": "john@example.com", "active": true}' rows="8"></textarea>
+        
+        <button id="generate-schema" class="btn-primary">Generate Schema</button>
+        
+        <div id="schema-output" style="display: none; margin-top: 1rem;">
+          <label>Generated Schema (copy to Power Automate):</label>
+          <textarea id="schema-result" readonly rows="10"></textarea>
+          <button id="copy-schema" class="btn-secondary" style="margin-top: 0.5rem;">Copy to Clipboard</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="fx-validator" class="utility-tool">
+      <h2>Power Fx Expression Validator</h2>
+      <p>Check Power Fx syntax for common errors. Note: This performs basic syntax validation only.</p>
+      
+      <div class="tool-section">
+        <label for="fx-input">Power Fx Expression:</label>
+        <textarea id="fx-input" placeholder="Filter(Contacts, Status = &quot;Active&quot;)" rows="6"></textarea>
+        
+        <button id="validate-fx" class="btn-primary">Validate</button>
+        
+        <div id="fx-output" style="display: none; margin-top: 1rem;">
+          <div id="fx-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="regex-tester" class="utility-tool">
+      <h2>Regex Tester</h2>
+      <p>Test regular expressions for pattern matching in Power Fx and Power Automate.</p>
+      
+      <div class="tool-section">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="regex-pattern">Pattern:</label>
+            <input type="text" id="regex-pattern" placeholder="^\w+@\w+\.\w+$" />
+          </div>
+          <div>
+            <label for="regex-flags">Flags (g,i,m):</label>
+            <input type="text" id="regex-flags" placeholder="i" />
+          </div>
+        </div>
+        
+        <label for="regex-test" style="margin-top: 1rem;">Test String:</label>
+        <textarea id="regex-test" placeholder="test@example.com" rows="4"></textarea>
+        
+        <button id="run-regex" class="btn-primary" style="margin-top: 0.5rem;">Test Pattern</button>
+        
+        <div id="regex-output" style="display: none; margin-top: 1rem;">
+          <div id="regex-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guid-gen" class="utility-tool">
+      <h2>GUID Generator</h2>
+      <p>Generate unique identifiers for Dataverse records and Power Platform components.</p>
+      
+      <div class="tool-section">
+        <button id="generate-guid" class="btn-primary">Generate New GUID</button>
+        
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; margin-top: 1rem;">
+          <input type="text" id="guid-output" readonly placeholder="Your GUID will appear here" />
+          <button id="copy-guid" class="btn-secondary" style="padding: 0.5rem 1rem;">Copy</button>
+        </div>
+        
+        <button id="generate-5-guids" class="btn-secondary" style="margin-top: 0.5rem;">Generate 5 GUIDs</button>
+        <div id="multi-guid-output" style="display: none; margin-top: 1rem;">
+          <textarea id="multi-guid-result" readonly rows="6"></textarea>
+          <button id="copy-multi-guid" class="btn-secondary" style="margin-top: 0.5rem;">Copy All</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="timestamp" class="utility-tool">
+      <h2>Unix Timestamp Converter</h2>
+      <p>Convert between Unix timestamps and readable dates for Power Automate workflows.</p>
+      
+      <div class="tool-section">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="unix-timestamp">Unix Timestamp:</label>
+            <input type="number" id="unix-timestamp" placeholder="1686400000" />
+            <button id="convert-from-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
+            <input type="text" id="unix-to-date" readonly style="margin-top: 0.5rem;" />
+          </div>
+          <div>
+            <label for="readable-date">Readable Date:</label>
+            <input type="datetime-local" id="readable-date" />
+            <button id="convert-to-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
+            <input type="text" id="date-to-unix" readonly style="margin-top: 0.5rem;" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="field-types" class="utility-tool">
+      <h2>Dataverse Field Types Reference</h2>
+      <p>Quick lookup for field types and their Power Fx equivalents.</p>
+      
+      <div class="reference-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Dataverse Type</th>
+              <th>Power Fx Equivalent</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Text</td>
+              <td>Text</td>
+              <td><code>"Hello"</code></td>
+            </tr>
+            <tr>
+              <td>Whole Number</td>
+              <td>Number</td>
+              <td><code>42</code></td>
+            </tr>
+            <tr>
+              <td>Decimal Number</td>
+              <td>Number</td>
+              <td><code>3.14</code></td>
+            </tr>
+            <tr>
+              <td>Date Only</td>
+              <td>Date</td>
+              <td><code>Date(2026, 6, 11)</code></td>
+            </tr>
+            <tr>
+              <td>Date and Time</td>
+              <td>DateTime</td>
+              <td><code>Now()</code></td>
+            </tr>
+            <tr>
+              <td>Yes/No</td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+            </tr>
+            <tr>
+              <td>Choice</td>
+              <td>Text (option set value)</td>
+              <td><code>"Active"</code></td>
+            </tr>
+            <tr>
+              <td>Lookup</td>
+              <td>Record</td>
+              <td><code>LookUp(Contacts, ID = ...)</code></td>
+            </tr>
+            <tr>
+              <td>Customer</td>
+              <td>Record (Account/Contact)</td>
+              <td><code>LookUp(Accounts, ID = ...)</code></td>
+            </tr>
+            <tr>
+              <td>Currency</td>
+              <td>Number</td>
+              <td><code>100.50</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Built with plain HTML, CSS, and JavaScript for fast GitHub Pages hosting.</p>
+    <p><a href="../admin/index.html">Admin</a></p>
+  </footer>
+
+  <style>
+    .utility-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .utility-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .utility-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0, 102, 204, 0.15);
+    }
+
+    .utility-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .utility-card h3 {
+      margin: 0.5rem 0;
+      color: var(--ink);
+    }
+
+    .utility-card p {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0.75rem 0;
+    }
+
+    .utility-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      transition: background 0.2s ease;
+    }
+
+    .utility-btn:hover {
+      background: var(--accent-strong);
+    }
+
+    .utility-tool {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 3rem 0;
+    }
+
+    .utility-tool h2 {
+      color: var(--ink);
+      margin-top: 0;
+    }
+
+    .tool-section {
+      margin-top: 1.5rem;
+    }
+
+    .tool-section label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .tool-section textarea,
+    .tool-section input[type="text"],
+    .tool-section input[type="number"],
+    .tool-section input[type="datetime-local"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.9rem;
+    }
+
+    .tool-section button {
+      margin-top: 0.5rem;
+    }
+
+    .reference-table {
+      margin-top: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .reference-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .reference-table th,
+    .reference-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .reference-table th {
+      background: rgba(0, 102, 204, 0.05);
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .reference-table code {
+      background: #f5f7fa;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+    }
+  </style>
+
+  <script>
+    // JSON Schema Generator
+    document.getElementById("generate-schema")?.addEventListener("click", () => {
+      const input = document.getElementById("json-input").value;
+      try {
+        const json = JSON.parse(input);
+        const schema = {
+          type: "object",
+          properties: {}
+        };
+        
+        for (const key in json) {
+          const value = json[key];
+          schema.properties[key] = {
+            type: typeof value === "boolean" ? "boolean" : typeof value === "number" ? "number" : "string"
+          };
+        }
+        
+        document.getElementById("schema-result").value = JSON.stringify(schema, null, 2);
+        document.getElementById("schema-output").style.display = "block";
+      } catch (e) {
+        alert("Invalid JSON: " + e.message);
+      }
+    });
+
+    document.getElementById("copy-schema")?.addEventListener("click", () => {
+      const text = document.getElementById("schema-result").value;
+      navigator.clipboard.writeText(text).then(() => alert("Schema copied!"));
+    });
+
+    // GUID Generator
+    function generateGUID() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === "x" ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    document.getElementById("generate-guid")?.addEventListener("click", () => {
+      document.getElementById("guid-output").value = generateGUID();
+    });
+
+    document.getElementById("copy-guid")?.addEventListener("click", () => {
+      const text = document.getElementById("guid-output").value;
+      if (text) navigator.clipboard.writeText(text).then(() => alert("GUID copied!"));
+    });
+
+    document.getElementById("generate-5-guids")?.addEventListener("click", () => {
+      const guids = Array.from({length: 5}, () => generateGUID()).join("\n");
+      document.getElementById("multi-guid-result").value = guids;
+      document.getElementById("multi-guid-output").style.display = "block";
+    });
+
+    document.getElementById("copy-multi-guid")?.addEventListener("click", () => {
+      const text = document.getElementById("multi-guid-result").value;
+      navigator.clipboard.writeText(text).then(() => alert("GUIDs copied!"));
+    });
+
+    // Regex Tester
+    document.getElementById("run-regex")?.addEventListener("click", () => {
+      const pattern = document.getElementById("regex-pattern").value;
+      const flags = document.getElementById("regex-flags").value;
+      const testStr = document.getElementById("regex-test").value;
+      
+      try {
+        const regex = new RegExp(pattern, flags);
+        const result = regex.test(testStr);
+        document.getElementById("regex-result").innerHTML = result ? 
+          "<p style='color: #15803d;'>✓ Match found!</p>" : 
+          "<p style='color: #9b1c1c;'>✗ No match</p>";
+        document.getElementById("regex-output").style.display = "block";
+      } catch (e) {
+        document.getElementById("regex-result").innerHTML = "<p style='color: #9b1c1c;'>Error: " + e.message + "</p>";
+        document.getElementById("regex-output").style.display = "block";
+      }
+    });
+
+    // Unix Timestamp Converter
+    document.getElementById("convert-from-unix")?.addEventListener("click", () => {
+      const timestamp = parseInt(document.getElementById("unix-timestamp").value) * 1000;
+      const date = new Date(timestamp).toLocaleString();
+      document.getElementById("unix-to-date").value = date;
+    });
+
+    document.getElementById("convert-to-unix")?.addEventListener("click", () => {
+      const dateStr = document.getElementById("readable-date").value;
+      const timestamp = Math.floor(new Date(dateStr).getTime() / 1000);
+      document.getElementById("date-to-unix").value = timestamp;
+    });
+  </script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

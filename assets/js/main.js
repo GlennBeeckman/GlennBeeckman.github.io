@@ -69,14 +69,14 @@
 
   syncLatestPostCard();
 
-  function initRobotFollower() {
+  function initSnailFollower() {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
     const style = document.createElement("style");
     style.textContent = `
-      .cursor-robot {
+      .cursor-snail {
         position: fixed;
         left: 0;
         top: 0;
@@ -90,38 +90,44 @@
         filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
       }
 
-      .cursor-robot .robot-body {
+      .cursor-snail .snail-body {
         display: inline-block;
         transform-origin: 50% 60%;
       }
 
-      .cursor-robot.is-walking .robot-body {
-        animation: robot-walk 600ms ease-in-out infinite;
+      .cursor-snail.is-eating .snail-body {
+        animation: snail-munch 220ms ease-in-out infinite;
       }
 
-      .cursor-robot.is-sitting .robot-body {
-        animation: robot-sit 400ms ease-in-out forwards;
+      .cursor-snail-crumb {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #7aa33a;
+        pointer-events: none;
+        z-index: 9998;
+        opacity: 0;
+        animation: snail-crumb-pop 280ms ease-out forwards;
       }
 
-      @keyframes robot-walk {
-        0% { transform: scaleX(1) rotateZ(0deg); }
-        25% { transform: scaleX(1) rotateZ(-2deg); }
-        50% { transform: scaleX(1) rotateZ(0deg); }
-        75% { transform: scaleX(1) rotateZ(2deg); }
-        100% { transform: scaleX(1) rotateZ(0deg); }
+      @keyframes snail-munch {
+        0% { transform: scale(1, 1) rotate(0deg); }
+        50% { transform: scale(1.08, 0.92) rotate(-4deg); }
+        100% { transform: scale(1, 1) rotate(0deg); }
       }
 
-      @keyframes robot-sit {
-        0% { transform: scaleX(1) rotateZ(0deg); }
-        100% { transform: scaleX(0.95) rotateZ(0deg); }
+      @keyframes snail-crumb-pop {
+        0% { opacity: 0.9; transform: scale(1) translateY(0); }
+        100% { opacity: 0; transform: scale(0.3) translateY(-8px); }
       }
     `;
     document.head.appendChild(style);
 
-    const robot = document.createElement("div");
-    robot.className = "cursor-robot";
-    robot.innerHTML = '<span class="robot-body" aria-hidden="true">🤖</span>';
-    document.body.appendChild(robot);
+    const snail = document.createElement("div");
+    snail.className = "cursor-snail";
+    snail.innerHTML = '<span class="snail-body" aria-hidden="true">🐌</span>';
+    document.body.appendChild(snail);
 
     const state = {
       mouseX: window.innerWidth * 0.5,
@@ -137,6 +143,15 @@
       state.mouseX = event.clientX;
       state.mouseY = event.clientY;
     }, { passive: true });
+
+    function emitCrumb(cx, cy) {
+      const crumb = document.createElement("span");
+      crumb.className = "cursor-snail-crumb";
+      crumb.style.left = (cx + (Math.random() * 8 - 4)) + "px";
+      crumb.style.top = (cy + (Math.random() * 8 - 4)) + "px";
+      document.body.appendChild(crumb);
+      setTimeout(() => crumb.remove(), 320);
+    }
 
     function tick(now) {
       const pull = 0.0008;
@@ -159,16 +174,17 @@
       state.x += state.velocityX;
       state.y += state.velocityY;
 
-      const faceScale = dx >= 0 ? 1 : -1;
+      const faceScale = dx >= 0 ? -1 : 1;
       const tilt = Math.max(-14, Math.min(14, dy * 0.08));
-      robot.style.transform = "translate(" + (state.x - 4) + "px, " + (state.y - 3) + "px) scaleX(" + faceScale + ") rotate(" + tilt + "deg)";
+      snail.style.transform = "translate(" + (state.x - 4) + "px, " + (state.y - 3) + "px) scaleX(" + faceScale + ") rotate(" + tilt + "deg)";
 
       const distance = Math.hypot(dx, dy);
-      const isSitting = distance < 12;
-      const isMoving = speed > 0.1;
-      
-      robot.classList.toggle("is-sitting", isSitting);
-      robot.classList.toggle("is-walking", !isSitting && isMoving);
+      const isEating = distance < 8;
+      snail.classList.toggle("is-eating", isEating);
+      if (isEating && now >= state.nextCrumbAt) {
+        emitCrumb(state.mouseX - 2, state.mouseY - 2);
+        state.nextCrumbAt = now + 130;
+      }
 
       requestAnimationFrame(tick);
     }
@@ -176,5 +192,5 @@
     requestAnimationFrame(tick);
   }
 
-  initRobotFollower();
+  initSnailFollower();
 })();

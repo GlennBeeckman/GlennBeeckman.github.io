@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private Physiotherapy Lab | GlennBeeckman.dev</title>
+  <meta name="description" content="Private preview: physiotherapy section for adults, children, relaxation, and testing workflows.">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    .private-pill {
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+      font-family: "IBM Plex Mono", monospace;
+      color: var(--accent);
+      background: rgba(0, 82, 204, 0.08);
+      margin-bottom: 0.75rem;
+    }
+
+    .stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .service-grid,
+    .tool-grid-private,
+    .roadmap-grid {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .service-card,
+    .tool-card-private,
+    .roadmap-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      padding: 1rem;
+    }
+
+    .service-card h3,
+    .tool-card-private h3,
+    .roadmap-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .test-grid {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .test-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.85rem;
+      background: var(--card);
+    }
+
+    .test-item p {
+      margin: 0.2rem 0 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .muted {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .field label {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 0.65rem;
+      font-family: inherit;
+      font-size: 0.92rem;
+      background: var(--card);
+      color: var(--ink);
+      box-sizing: border-box;
+    }
+
+    .field textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .toolbar {
+      margin-top: 0.9rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tool-result {
+      margin-top: 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(0, 82, 204, 0.04);
+      padding: 0.8rem;
+      white-space: pre-wrap;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.85rem;
+    }
+
+    .alert {
+      border-left: 4px solid #b45309;
+      background: rgba(245, 158, 11, 0.08);
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #78350f;
+    }
+
+    .success {
+      border-left: 4px solid #047857;
+      background: rgba(16, 185, 129, 0.08);
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #065f46;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .split-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    .split-badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
+      font-family: "IBM Plex Mono", monospace;
+      color: var(--accent);
+      background: rgba(0, 82, 204, 0.08);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header class="site-header">
+    <a class="brand" href="../index.html">
+      <span class="brand-dot"></span>
+      GlennBeeckman.dev
+    </a>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../tools/index.html">Tools</a>
+      <a href="../admin/index.html">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <span class="private-pill">PRIVATE PREVIEW · NOT LINKED IN MAIN NAV</span>
+      <p class="kicker">Physiotherapy Expansion</p>
+      <h1>Adults, Pediatrics, Relaxation, and Clinical Testing</h1>
+      <p class="lead">This hidden page is your draft workspace for a physiotherapy-focused extension of the website. It combines patient-facing content ideas and practical therapist tools.</p>
+    </section>
+
+    <section class="panel reveal stack">
+      <h2>Service Structure</h2>
+      <p class="muted">Suggested top-level services for your new section.</p>
+      <div class="service-grid">
+        <article class="service-card">
+          <h3>Adult Physiotherapy</h3>
+          <p>Musculoskeletal pain, posture, mobility, and rehabilitation goals with measurable follow-up plans.</p>
+        </article>
+        <article class="service-card">
+          <h3>Pediatric Physiotherapy</h3>
+          <p>Motor development, posture, balance, coordination, participation at school/home, and parent coaching.</p>
+        </article>
+        <article class="service-card">
+          <h3>Relaxation Therapy</h3>
+          <p>Breathing, progressive muscle relaxation, and guided regulation routines for stress/pain support.</p>
+        </article>
+        <article class="service-card">
+          <h3>Testing and Follow-up</h3>
+          <p>Structured functional assessment workflows to establish baselines and track progression over time.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal stack">
+      <h2>Testing Framework (Named, Standardized)</h2>
+      <div class="alert">Testing tools support clinical reasoning and communication. They do not replace medical diagnosis or urgent referral decisions.</div>
+      <div class="test-grid">
+        <article class="test-item">
+          <strong>Berg Balance Scale (BBS)</strong>
+          <p>Adult balance screening and progress tracking in functional tasks.</p>
+        </article>
+        <article class="test-item">
+          <strong>Pediatric Balance Scale (PBS)</strong>
+          <p>School-age child functional balance observation with 14-item scoring.</p>
+        </article>
+        <article class="test-item">
+          <strong>Timed Up and Go (TUG)</strong>
+          <p>Simple mobility transition timing for adults and children in context.</p>
+        </article>
+        <article class="test-item">
+          <strong>Visual Analogue Scale (VAS)</strong>
+          <p>Pain intensity anchor for adults and pediatric-adapted communication flows.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal stack">
+      <div class="split-header">
+        <h2 style="margin:0;">Tools Split</h2>
+        <span class="split-badge">PHYSIOTHERAPIST TOOLS</span>
+        <span class="split-badge">PATIENT / PARENT TOOLS</span>
+      </div>
+      <p class="muted">The workspace below is intentionally split into clinic workflow tools and home support tools.</p>
+    </section>
+
+    <section class="panel reveal stack">
+      <div class="split-header">
+        <h2 style="margin:0;">Physiotherapist Tools</h2>
+        <span class="split-badge">ASSESS · PLAN · COMMUNICATE</span>
+      </div>
+      <div class="tool-grid-private">
+        <article class="tool-card-private">
+          <h3>1) Functional Test Battery Assistant</h3>
+          <p class="muted">Combine common adult functional checks into one summary (TUG, Chair Stand, 4-Stage Balance, optional BBS).</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="ft-patient">Patient Initials</label>
+              <input id="ft-patient" type="text" placeholder="e.g., J.D.">
+            </div>
+            <div class="field">
+              <label for="ft-date">Assessment Date</label>
+              <input id="ft-date" type="date">
+            </div>
+            <div class="field">
+              <label for="ft-tug">TUG (seconds)</label>
+              <input id="ft-tug" type="number" step="0.1" min="0" placeholder="e.g., 11.8">
+            </div>
+            <div class="field">
+              <label for="ft-chair">30s Chair Stand (reps)</label>
+              <input id="ft-chair" type="number" min="0" placeholder="e.g., 10">
+            </div>
+            <div class="field">
+              <label for="ft-balance">4-Stage Hold (seconds)</label>
+              <input id="ft-balance" type="number" step="1" min="0" max="30" placeholder="e.g., 10">
+            </div>
+            <div class="field">
+              <label for="ft-bbs">BBS Total (optional /56)</label>
+              <input id="ft-bbs" type="number" min="0" max="56" placeholder="e.g., 47">
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="ft-generate">Generate Battery Summary</button>
+            <button id="ft-copy" class="ghost">Copy</button>
+          </div>
+          <div id="ft-result" class="tool-result">No battery summary generated yet.</div>
+        </article>
+
+        <article class="tool-card-private">
+          <h3>2) Pediatric Function Profile (F-words style)</h3>
+          <p class="muted">Strengths-based child profile across Function, Family, Fitness, Fun, Friends, and Future.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="pf-child">Child Initials</label>
+              <input id="pf-child" type="text" placeholder="e.g., M.R.">
+            </div>
+            <div class="field">
+              <label for="pf-age">Age</label>
+              <input id="pf-age" type="text" placeholder="e.g., 7y 3m">
+            </div>
+            <div class="field">
+              <label for="pf-function">Functioning</label>
+              <textarea id="pf-function" placeholder="What can the child do today?"></textarea>
+            </div>
+            <div class="field">
+              <label for="pf-family">Family Priorities</label>
+              <textarea id="pf-family" placeholder="What matters most to the family now?"></textarea>
+            </div>
+            <div class="field">
+              <label for="pf-fitness">Fitness</label>
+              <textarea id="pf-fitness" placeholder="Endurance, strength, balance observations"></textarea>
+            </div>
+            <div class="field">
+              <label for="pf-fun">Fun Motivators</label>
+              <textarea id="pf-fun" placeholder="Preferred activities or games"></textarea>
+            </div>
+            <div class="field">
+              <label for="pf-friends">Friends / Participation</label>
+              <textarea id="pf-friends" placeholder="School/playground/community participation"></textarea>
+            </div>
+            <div class="field">
+              <label for="pf-future">Future Goal</label>
+              <textarea id="pf-future" placeholder="3-6 month meaningful target"></textarea>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="pf-generate">Generate Pediatric Profile</button>
+            <button id="pf-copy" class="ghost">Copy</button>
+          </div>
+          <div id="pf-result" class="tool-result">No pediatric profile generated yet.</div>
+        </article>
+
+        <article class="tool-card-private">
+          <h3>3) Parent-Friendly Session Summary Builder</h3>
+          <p class="muted">Translate therapy actions into plain-language home guidance for parents.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="ps-child">Child Name / Initials</label>
+              <input id="ps-child" type="text" placeholder="e.g., N.">
+            </div>
+            <div class="field">
+              <label for="ps-focus">Today's Focus</label>
+              <input id="ps-focus" type="text" placeholder="e.g., step-up confidence + single-leg control">
+            </div>
+            <div class="field">
+              <label for="ps-why">Why This Matters</label>
+              <textarea id="ps-why" placeholder="e.g., safer stairs at school and more playground confidence"></textarea>
+            </div>
+            <div class="field">
+              <label for="ps-home">Home Practice</label>
+              <textarea id="ps-home" placeholder="e.g., step-ups 2 sets x 8, balance game 5 minutes"></textarea>
+            </div>
+            <div class="field">
+              <label for="ps-frequency">Frequency</label>
+              <input id="ps-frequency" type="text" placeholder="e.g., 5 days/week">
+            </div>
+            <div class="field">
+              <label for="ps-next">Next Session Goal</label>
+              <input id="ps-next" type="text" placeholder="e.g., reduce hand support on stairs">
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="ps-generate">Generate Parent Summary</button>
+            <button id="ps-copy" class="ghost">Copy</button>
+          </div>
+          <div id="ps-result" class="tool-result">No parent summary generated yet.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal stack">
+      <div class="split-header">
+        <h2 style="margin:0;">Patient / Parent Tools</h2>
+        <span class="split-badge">HOME SUPPORT · SELF-MANAGEMENT</span>
+      </div>
+      <div class="tool-grid-private">
+        <article class="tool-card-private">
+          <h3>4) Home Exercise Prescription Generator</h3>
+          <p class="muted">Generate a simple home plan with dosing and progression cues for adults or children.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="he-person">Profile</label>
+              <select id="he-person">
+                <option value="adult">Adult</option>
+                <option value="child">Child</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="he-goal">Primary Goal</label>
+              <select id="he-goal">
+                <option value="balance">Balance</option>
+                <option value="strength">Strength</option>
+                <option value="mobility">Mobility</option>
+                <option value="play">Play-based coordination</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="he-level">Current Level</label>
+              <select id="he-level">
+                <option value="low">Low tolerance</option>
+                <option value="medium">Moderate tolerance</option>
+                <option value="high">High tolerance</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="he-days">Days / Week</label>
+              <input id="he-days" type="number" min="1" max="7" value="4">
+            </div>
+            <div class="field">
+              <label for="he-minutes">Minutes / Session</label>
+              <input id="he-minutes" type="number" min="5" max="45" value="15">
+            </div>
+            <div class="field">
+              <label for="he-equipment">Available Equipment</label>
+              <input id="he-equipment" type="text" placeholder="e.g., step, chair, resistance band">
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="he-generate">Generate Home Plan</button>
+            <button id="he-copy" class="ghost">Copy</button>
+          </div>
+          <div id="he-result" class="tool-result">No home plan generated yet.</div>
+        </article>
+
+        <article class="tool-card-private">
+          <h3>5) Pain Flare Plan Builder</h3>
+          <p class="muted">Create a clear action plan for flare-ups with calming, pacing, and escalation steps.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="fp-name">Name / Initials</label>
+              <input id="fp-name" type="text" placeholder="e.g., L.K.">
+            </div>
+            <div class="field">
+              <label for="fp-triggers">Common Triggers</label>
+              <textarea id="fp-triggers" placeholder="e.g., long sitting, stress, poor sleep"></textarea>
+            </div>
+            <div class="field">
+              <label for="fp-signals">Early Warning Signals</label>
+              <textarea id="fp-signals" placeholder="e.g., stiffness, fatigue spike, concentration drop"></textarea>
+            </div>
+            <div class="field">
+              <label for="fp-calming">Calming Reset (5-10 min)</label>
+              <textarea id="fp-calming" placeholder="e.g., 4-6 breathing + gentle mobility"></textarea>
+            </div>
+            <div class="field">
+              <label for="fp-dos">What To Do</label>
+              <textarea id="fp-dos" placeholder="e.g., reduce load 30%, continue light movement"></textarea>
+            </div>
+            <div class="field">
+              <label for="fp-donts">What To Avoid</label>
+              <textarea id="fp-donts" placeholder="e.g., complete bed rest, panic over score changes"></textarea>
+            </div>
+            <div class="field">
+              <label for="fp-contact">Contact Therapist If</label>
+              <textarea id="fp-contact" placeholder="e.g., flare >72h, sleep heavily disrupted"></textarea>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button id="fp-generate">Generate Flare Plan</button>
+            <button id="fp-copy" class="ghost">Copy</button>
+          </div>
+          <div id="fp-result" class="tool-result">No flare plan generated yet.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel reveal stack">
+      <h2>Roadmap Suggestions</h2>
+      <div class="roadmap-grid">
+        <article class="roadmap-card">
+          <h3>Phase 1</h3>
+          <p>Public-facing pages (adult, child, relaxation), FAQs, and private testing pages.</p>
+        </article>
+        <article class="roadmap-card">
+          <h3>Phase 2</h3>
+          <p>Outcome trend tracker, home-program printouts, parent guidance library.</p>
+        </article>
+        <article class="roadmap-card">
+          <h3>Phase 3</h3>
+          <p>Multilingual content (NL/FR/EN), deeper test batteries, and analytics-driven iteration.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Private lab page. Keep URL unshared until you are ready to publish.</p>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    function copyText(text) {
+      if (!navigator.clipboard) {
+        return Promise.reject(new Error("Clipboard API unavailable"));
+      }
+      return navigator.clipboard.writeText(text);
+    }
+
+    function copyBtnFeedback(button, text) {
+      button.textContent = text;
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 900);
+    }
+
+    function bindCopyAction(buttonId, resultId) {
+      const button = document.getElementById(buttonId);
+      const resultEl = document.getElementById(resultId);
+      button.addEventListener("click", async () => {
+        try {
+          await copyText(resultEl.textContent);
+          copyBtnFeedback(button, "Copied");
+        } catch (error) {
+          copyBtnFeedback(button, "Copy failed");
+        }
+      });
+    }
+
+    function buildFunctionalBatterySummary() {
+      const patient = document.getElementById("ft-patient").value.trim() || "(not set)";
+      const date = document.getElementById("ft-date").value || "(not set)";
+      const tug = Number(document.getElementById("ft-tug").value);
+      const chair = Number(document.getElementById("ft-chair").value);
+      const balance = Number(document.getElementById("ft-balance").value);
+      const bbsRaw = document.getElementById("ft-bbs").value.trim();
+      const bbs = bbsRaw ? Number(bbsRaw) : null;
+      const flags = [];
+
+      if (Number.isFinite(tug) && tug > 12) flags.push("TUG > 12s: mobility/falls caution.");
+      if (Number.isFinite(chair) && chair < 8) flags.push("Chair Stand < 8: lower-limb strength/endurance concern.");
+      if (Number.isFinite(balance) && balance < 10) flags.push("4-Stage < 10s: static balance concern.");
+      if (Number.isFinite(bbs) && bbs < 45) flags.push("BBS < 45: higher fall-risk context.");
+
+      const risk = flags.length >= 3 ? "HIGH" : (flags.length >= 1 ? "MODERATE" : "LOW");
+      return [
+        "FUNCTIONAL TEST BATTERY SUMMARY",
+        "-------------------------------",
+        "Patient: " + patient,
+        "Date: " + date,
+        "TUG: " + (Number.isFinite(tug) ? tug + " sec" : "(not set)"),
+        "30s Chair Stand: " + (Number.isFinite(chair) ? chair + " reps" : "(not set)"),
+        "4-Stage Hold: " + (Number.isFinite(balance) ? balance + " sec" : "(not set)"),
+        "BBS: " + (Number.isFinite(bbs) ? bbs + " / 56" : "(not set)"),
+        "",
+        "Risk Band: " + risk,
+        "Flags: " + (flags.length ? flags.join(" | ") : "No immediate threshold flags."),
+        "",
+        "Use alongside history, pain, confidence, and participation goals."
+      ].join("\n");
+    }
+
+    function bindFunctionalBattery() {
+      const resultEl = document.getElementById("ft-result");
+      document.getElementById("ft-generate").addEventListener("click", () => {
+        resultEl.textContent = buildFunctionalBatterySummary();
+      });
+      bindCopyAction("ft-copy", "ft-result");
+    }
+
+    function valueOrDefault(id, fallback) {
+      const value = document.getElementById(id).value.trim();
+      return value || fallback;
+    }
+
+    function buildPediatricProfile() {
+      return [
+        "PEDIATRIC FUNCTION PROFILE (F-WORDS STYLE)",
+        "-----------------------------------------",
+        "Child: " + valueOrDefault("pf-child", "(not set)"),
+        "Age: " + valueOrDefault("pf-age", "(not set)"),
+        "",
+        "Functioning: " + valueOrDefault("pf-function", "(not set)"),
+        "Family priorities: " + valueOrDefault("pf-family", "(not set)"),
+        "Fitness: " + valueOrDefault("pf-fitness", "(not set)"),
+        "Fun motivators: " + valueOrDefault("pf-fun", "(not set)"),
+        "Friends/participation: " + valueOrDefault("pf-friends", "(not set)"),
+        "Future goal: " + valueOrDefault("pf-future", "(not set)"),
+        "",
+        "Top 3 focus areas next session:",
+        "1) Function task practice",
+        "2) Participation barrier reduction",
+        "3) Family-embedded home practice"
+      ].join("\n");
+    }
+
+    function bindPediatricProfile() {
+      const resultEl = document.getElementById("pf-result");
+      document.getElementById("pf-generate").addEventListener("click", () => {
+        resultEl.textContent = buildPediatricProfile();
+      });
+      bindCopyAction("pf-copy", "pf-result");
+    }
+
+    function buildParentSummary() {
+      return [
+        "PARENT-FRIENDLY SESSION SUMMARY",
+        "-------------------------------",
+        "Child: " + valueOrDefault("ps-child", "(not set)"),
+        "Today's focus: " + valueOrDefault("ps-focus", "(not set)"),
+        "Why this matters: " + valueOrDefault("ps-why", "(not set)"),
+        "Home practice: " + valueOrDefault("ps-home", "(not set)"),
+        "How often: " + valueOrDefault("ps-frequency", "(not set)"),
+        "Next step: " + valueOrDefault("ps-next", "(not set)"),
+        "",
+        "Tip: Keep sessions short, playful, and linked to daily routines."
+      ].join("\n");
+    }
+
+    function bindParentSummary() {
+      const resultEl = document.getElementById("ps-result");
+      document.getElementById("ps-generate").addEventListener("click", () => {
+        resultEl.textContent = buildParentSummary();
+      });
+      bindCopyAction("ps-copy", "ps-result");
+    }
+
+    function buildHomePlan() {
+      const person = document.getElementById("he-person").value;
+      const goal = document.getElementById("he-goal").value;
+      const level = document.getElementById("he-level").value;
+      const days = Number(document.getElementById("he-days").value) || 4;
+      const minutes = Number(document.getElementById("he-minutes").value) || 15;
+      const equipment = valueOrDefault("he-equipment", "bodyweight / household support");
+
+      const levelSets = level === "low" ? "2" : (level === "medium" ? "3" : "4");
+      const levelReps = level === "low" ? "6-8" : (level === "medium" ? "8-10" : "10-12");
+
+      let mainBlock = "Balance tasks + sit-to-stand + walking confidence.";
+      if (goal === "strength") mainBlock = "Lower-limb strengthening + controlled tempo work.";
+      if (goal === "mobility") mainBlock = "Joint mobility flow + range + movement confidence.";
+      if (goal === "play") mainBlock = "Play-based coordination circuits and obstacle games.";
+
+      return [
+        "HOME EXERCISE PRESCRIPTION",
+        "--------------------------",
+        "Profile: " + person,
+        "Goal: " + goal,
+        "Schedule: " + days + " days/week, " + minutes + " min/session",
+        "Equipment: " + equipment,
+        "",
+        "Session template:",
+        "1) Warm-up 3 min (easy mobility + breathing)",
+        "2) Main block: " + mainBlock,
+        "3) Dosage: " + levelSets + " sets x " + levelReps + " reps",
+        "4) Cool-down 2 min + note symptom response",
+        "",
+        "Progression rule: if tolerated for 3 sessions, increase reps or reduce support slightly."
+      ].join("\n");
+    }
+
+    function bindHomePlan() {
+      const resultEl = document.getElementById("he-result");
+      document.getElementById("he-generate").addEventListener("click", () => {
+        resultEl.textContent = buildHomePlan();
+      });
+      bindCopyAction("he-copy", "he-result");
+    }
+
+    function buildFlarePlan() {
+      return [
+        "PAIN FLARE PLAN",
+        "--------------",
+        "Name/Initials: " + valueOrDefault("fp-name", "(not set)"),
+        "Triggers: " + valueOrDefault("fp-triggers", "(not set)"),
+        "Early signals: " + valueOrDefault("fp-signals", "(not set)"),
+        "5-10 min calming reset: " + valueOrDefault("fp-calming", "(not set)"),
+        "What to do: " + valueOrDefault("fp-dos", "(not set)"),
+        "What to avoid: " + valueOrDefault("fp-donts", "(not set)"),
+        "Contact therapist if: " + valueOrDefault("fp-contact", "(not set)"),
+        "",
+        "Urgent escalation: severe new neurological symptoms, trauma, fever/infection signs, or uncontrolled worsening."
+      ].join("\n");
+    }
+
+    function bindFlarePlan() {
+      const resultEl = document.getElementById("fp-result");
+      document.getElementById("fp-generate").addEventListener("click", () => {
+        resultEl.textContent = buildFlarePlan();
+      });
+      bindCopyAction("fp-copy", "fp-result");
+    }
+
+    bindFunctionalBattery();
+    bindPediatricProfile();
+    bindParentSummary();
+    bindHomePlan();
+    bindFlarePlan();
+  </script>
+</body>
+</html>

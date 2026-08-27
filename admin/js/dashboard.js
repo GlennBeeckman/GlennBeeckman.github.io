@@ -78,12 +78,28 @@ function previewPost() {
   currentPostData = { ...data, formattedDate };
 
   // Wire up action buttons
-  document.getElementById("publish-btn")?.addEventListener("click", publishDirectly);
-  document.getElementById("download-btn")?.addEventListener("click", downloadPost);
-  document.getElementById("copy-html-btn")?.addEventListener("click", copyPostHTML);
-  document.getElementById("close-preview-btn")?.addEventListener("click", () => {
-    section.style.display = "none";
-  });
+  const publishBtn = document.getElementById("publish-btn");
+  const downloadBtn = document.getElementById("download-btn");
+  const copyBtn = document.getElementById("copy-html-btn");
+  const closeBtn = document.getElementById("close-preview-btn");
+
+  if (publishBtn) {
+    publishBtn.onclick = publishDirectly;
+  }
+
+  if (downloadBtn) {
+    downloadBtn.onclick = downloadPost;
+  }
+
+  if (copyBtn) {
+    copyBtn.onclick = copyPostHTML;
+  }
+
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      section.style.display = "none";
+    };
+  }
 }
 
 function generatePost() {
@@ -145,25 +161,23 @@ async function publishDirectly() {
     return;
   }
 
+  if (typeof window.showDirectoryPicker !== "function") {
+    alert("Direct publish requires a browser that supports the File System Access API (for example Chromium-based browsers). Use Download Post Files instead.");
+    return;
+  }
+
   try {
     const { title, slug, formattedDate, content, excerpt } = currentPostData;
-    
-    // Ask user to select a folder (ideally the root of the repo)
+
+    // Ask user to select the repository root folder.
     const rootFolder = await window.showDirectoryPicker();
-    
-    // Navigate to blog/posts folder
-    let blogFolder = rootFolder;
-    try {
-      blogFolder = await rootFolder.getDirectoryHandle("blog", { create: false });
-      blogFolder = await blogFolder.getDirectoryHandle("posts", { create: true });
-    } catch (e) {
-      alert("Error: Could not find or create blog/posts folder. Make sure you selected the root of your repository.");
-      return;
-    }
-    
+
+    const blogFolder = await rootFolder.getDirectoryHandle("blog", { create: false });
+    const postsFolder = await blogFolder.getDirectoryHandle("posts", { create: true });
+
     // Create post folder
     const postFolder = await postsFolder.getDirectoryHandle(slug, { create: true });
-    
+
     // Write index.html
     const postHTML = generatePostHTML(title, formattedDate, content);
     const indexFile = await postFolder.getFileHandle("index.html", { create: true });
@@ -171,8 +185,8 @@ async function publishDirectly() {
     await writable.write(postHTML);
     await writable.close();
 
-    // Update blog/index.html to add the teaser
-    await updateBlogIndex(title, slug, formattedDate, excerpt);
+    // Update blog/index.html to add the teaser.
+    await updateBlogIndex(blogFolder, title, slug, formattedDate, excerpt);
 
     alert(
       `✓ Post published successfully!\n\nFolder: blog/posts/${slug}/\n\nDon't forget to:\n1. Upload any images to blog/assets/images/\n2. Commit and push to GitHub`
@@ -186,9 +200,9 @@ async function publishDirectly() {
     currentPostData = null;
   } catch (error) {
     if (error.name === "NotAllowedError") {
-      alert("Permission denied. Please select the blog/posts/ folder.");
+      alert("Permission denied. Please allow folder access and try again.");
     } else if (error.name === "NotFoundError") {
-      alert("Could not find the folder. Please try again.");
+      alert("Could not find blog/posts in the selected folder. Please choose your repository root.");
     } else {
       console.error("Error:", error);
       alert("Error publishing post: " + error.message);
@@ -196,30 +210,17 @@ async function publishDirectly() {
   }
 }
 
-async function updateBlogIndex(title, slug, date, excerpt) {
+async function updateBlogIndex(blogFolder, title, slug, date, excerpt) {
   try {
-    // Get access to the blog folder
-    const root = await window.showDirectoryPicker();
-    
-    // Navigate to blog/index.html
-    let blogFolder = root;
-    try {
-      // Try to go up to find blog folder
-      if (root.name === "posts") {
-        blogFolder = await root.getParent();
-      }
-      if (blogFolder.name === "blog") {
-        // Good, we're in blog folder
-      }
-    } catch (e) {
-      console.log("Could not verify blog folder structure, skipping blog index update");
+    const blogIndexHandle = await blogFolder.getFileHandle("index.html", { create: false });
+    const blogIndexFile = await blogIndexHandle.getFile();
+    const content = await blogIndexFile.text();
+
+    if (content.includes(`href="posts/${slug}/`)) {
       return;
     }
 
-    const blogIndexFile = await blogFolder.getFileHandle("index.html");
-    const content = await blogIndexFile.text();
-
-    // Create new teaser HTML (insert before the first existing post-teaser if any)
+    // Insert a new teaser above existing posts.
     const teaserHTML = `      <article class="post-teaser">
         <div class="post-meta">${date}</div>
         <h3><a href="posts/${slug}/">${title}</a></h3>
@@ -227,15 +228,19 @@ async function updateBlogIndex(title, slug, date, excerpt) {
         <a href="posts/${slug}/" class="read-more">Read More →</a>
       </article>\n`;
 
-    // Find the post-teaser section and insert before it
     let updatedContent = content;
-    const teaserRegex = /(\s+)<article class="post-teaser">/;
-    if (teaserRegex.test(content)) {
-      updatedContent = content.replace(teaserRegex, teaserHTML + "$1<article class=\"post-teaser\">");
+    const sectionStart = content.indexOf('<section class="posts-list reveal">');
+
+    if (sectionStart !== -1) {
+      const insertAt = sectionStart + '<section class="posts-list reveal">'.length;
+      updatedContent = content.slice(0, insertAt) + "\n" + teaserHTML + content.slice(insertAt);
+    } else {
+      console.warn("Posts section not found; blog index was not updated automatically.");
+      return;
     }
 
     // Write updated content
-    const writable = await blogIndexFile.createWritable();
+    const writable = await blogIndexHandle.createWritable();
     await writable.write(updatedContent);
     await writable.close();
   } catch (error) {

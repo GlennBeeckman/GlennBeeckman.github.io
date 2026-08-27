@@ -281,6 +281,16 @@
       </div>
     </div>
 
+    <section class="panel reveal category-section hidden" id="recent-section">
+      <div class="category-header">
+        <span class="category-emoji">🕘</span>
+        <h2>Recently Used</h2>
+        <span class="tool-count" id="recent-count">0</span>
+      </div>
+      <p style="color: var(--text-light); margin-bottom: 1.5rem;">Quickly jump back into tools you opened recently on this device.</p>
+      <div class="feature-grid" id="recent-grid"></div>
+    </section>
+
     <!-- Quick Tools Section -->
     <section class="panel reveal category-section" id="quick-tools-section">
       <div class="category-header">
@@ -379,178 +389,6 @@
   </main>
 
   <!-- Utility Tool Sections -->
-  <section id="json-schema" class="utility-tool">
-    <h2>JSON Schema Generator</h2>
-    <p>Paste sample JSON data and generate the schema format needed for Power Automate's "Parse JSON" action.</p>
-    
-    <div class="tool-section">
-      <label for="json-input">Sample JSON Data:</label>
-      <textarea id="json-input" placeholder='{"name": "John", "email": "john@example.com", "active": true}' rows="8"></textarea>
-      
-      <button id="generate-schema" class="btn-primary">Generate Schema</button>
-      
-      <div id="schema-output" style="display: none; margin-top: 1rem;">
-        <label>Generated Schema (copy to Power Automate):</label>
-        <textarea id="schema-result" readonly rows="10"></textarea>
-        <button id="copy-schema" class="btn-secondary" style="margin-top: 0.5rem;">Copy to Clipboard</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="fx-validator" class="utility-tool">
-    <h2>Power Fx Expression Validator</h2>
-    <p>Check Power Fx syntax for common errors. Note: This performs basic syntax validation only.</p>
-    
-    <div class="tool-section">
-      <label for="fx-input">Power Fx Expression:</label>
-      <textarea id="fx-input" placeholder="Filter(Contacts, Status = &quot;Active&quot;)" rows="6"></textarea>
-      
-      <button id="validate-fx" class="btn-primary">Validate</button>
-      
-      <div id="fx-output" style="display: none; margin-top: 1rem;">
-        <div id="fx-result"></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="regex-tester" class="utility-tool">
-    <h2>Regex Tester</h2>
-    <p>Test regular expressions for pattern matching in Power Fx and Power Automate.</p>
-    
-    <div class="tool-section">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div>
-          <label for="regex-pattern">Pattern:</label>
-          <input type="text" id="regex-pattern" placeholder="^\w+@\w+\.\w+$" />
-        </div>
-        <div>
-          <label for="regex-flags">Flags (g,i,m):</label>
-          <input type="text" id="regex-flags" placeholder="i" />
-        </div>
-      </div>
-      
-      <label for="regex-test" style="margin-top: 1rem;">Test String:</label>
-      <textarea id="regex-test" placeholder="test@example.com" rows="4"></textarea>
-      
-      <button id="run-regex" class="btn-primary" style="margin-top: 0.5rem;">Test Pattern</button>
-      
-      <div id="regex-output" style="display: none; margin-top: 1rem;">
-        <div id="regex-result"></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="guid-gen" class="utility-tool">
-    <h2>GUID Generator</h2>
-    <p>Generate unique identifiers for Dataverse records and Power Platform components.</p>
-    
-    <div class="tool-section">
-      <button id="generate-guid" class="btn-primary">Generate New GUID</button>
-      
-      <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; margin-top: 1rem;">
-        <input type="text" id="guid-output" readonly placeholder="Your GUID will appear here" />
-        <button id="copy-guid" class="btn-secondary" style="padding: 0.5rem 1rem;">Copy</button>
-      </div>
-      
-      <button id="generate-5-guids" class="btn-secondary" style="margin-top: 0.5rem;">Generate 5 GUIDs</button>
-      <div id="multi-guid-output" style="display: none; margin-top: 1rem;">
-        <textarea id="multi-guid-result" readonly rows="6"></textarea>
-        <button id="copy-multi-guid" class="btn-secondary" style="margin-top: 0.5rem;">Copy All</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="timestamp" class="utility-tool">
-    <h2>Unix Timestamp Converter</h2>
-    <p>Convert between Unix timestamps and readable dates for Power Automate workflows.</p>
-    
-    <div class="tool-section">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div>
-          <label for="unix-timestamp">Unix Timestamp:</label>
-          <input type="number" id="unix-timestamp" placeholder="1686400000" />
-          <button id="convert-from-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
-          <input type="text" id="unix-to-date" readonly style="margin-top: 0.5rem;" />
-        </div>
-        <div>
-          <label for="readable-date">Readable Date:</label>
-          <input type="datetime-local" id="readable-date" />
-          <button id="convert-to-unix" class="btn-primary" style="margin-top: 0.5rem;">Convert</button>
-          <input type="text" id="date-to-unix" readonly style="margin-top: 0.5rem;" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="field-types" class="utility-tool">
-    <h2>Dataverse Field Types Reference</h2>
-    <p>Quick lookup for field types and their Power Fx equivalents.</p>
-    
-    <div class="reference-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Dataverse Type</th>
-            <th>Power Fx Equivalent</th>
-            <th>Example</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Text</td>
-            <td>Text</td>
-            <td>Text(User().FullName)</td>
-          </tr>
-          <tr>
-            <td>Whole Number</td>
-            <td>Number</td>
-            <td>Value(5)</td>
-          </tr>
-          <tr>
-            <td>Decimal Number</td>
-            <td>Number (decimal context)</td>
-            <td>3.14</td>
-          </tr>
-          <tr>
-            <td>Yes/No</td>
-            <td>Boolean</td>
-            <td>true or false</td>
-          </tr>
-          <tr>
-            <td>Date Only</td>
-            <td>Date</td>
-            <td>Today()</td>
-          </tr>
-          <tr>
-            <td>Date and Time</td>
-            <td>DateTime</td>
-            <td>Now()</td>
-          </tr>
-          <tr>
-            <td>Lookup</td>
-            <td>Record</td>
-            <td>First(Contacts).Department</td>
-          </tr>
-          <tr>
-            <td>Choice</td>
-            <td>Text or Number</td>
-            <td>"Active"</td>
-          </tr>
-          <tr>
-            <td>Multiple Choice Options</td>
-            <td>Table of Text</td>
-            <td>{"Option1"; "Option2"}</td>
-          </tr>
-          <tr>
-            <td>Currency</td>
-            <td>Number (decimal context)</td>
-            <td>99.99</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
   <section id="json-schema" class="utility-tool">
     <h2>JSON Schema Generator</h2>
     <p>Paste sample JSON data and generate the schema format needed for Power Automate's "Parse JSON" action.</p>
@@ -832,6 +670,9 @@
   </style>
 
   <script>
+    const RECENT_TOOLS_KEY = "recent_tools_v1";
+    const MAX_RECENT_TOOLS = 6;
+
     const tools = [
       // Quick Tools (Most Used)
       { name: "Base64 Encoder/Decoder", desc: "Encode text to Base64 or decode back to plain text. Includes PDF to Base64 converter.", url: "base64/index.html", tags: ["encode", "decode", "base64"], categories: ["quick-tools", "security"] },
@@ -877,6 +718,82 @@
     let currentFilter = "all";
     let currentSearch = "";
 
+    function getRecentTools() {
+      try {
+        const raw = localStorage.getItem(RECENT_TOOLS_KEY);
+        if (!raw) {
+          return [];
+        }
+
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+
+        return parsed;
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveRecentTools(items) {
+      localStorage.setItem(RECENT_TOOLS_KEY, JSON.stringify(items.slice(0, MAX_RECENT_TOOLS)));
+    }
+
+    function recordRecentTool(tool) {
+      const current = getRecentTools().filter((item) => item.url !== tool.url);
+      current.unshift({
+        name: tool.name,
+        desc: tool.desc,
+        url: tool.url,
+        tags: Array.isArray(tool.tags) ? tool.tags.slice(0, 3) : []
+      });
+      saveRecentTools(current);
+      renderRecentTools();
+    }
+
+    function renderRecentTools() {
+      const recentSection = document.getElementById("recent-section");
+      const recentGrid = document.getElementById("recent-grid");
+      const recentCount = document.getElementById("recent-count");
+      const recent = getRecentTools();
+
+      if (!recentSection || !recentGrid || !recentCount) {
+        return;
+      }
+
+      recentCount.textContent = String(recent.length);
+
+      if (recent.length === 0) {
+        recentGrid.innerHTML = "";
+        recentSection.classList.add("hidden");
+        return;
+      }
+
+      recentSection.classList.remove("hidden");
+      recentGrid.innerHTML = recent.map((tool) => {
+        const tagsHtml = (tool.tags || []).map((tag) => `<span class=\"tool-tag\">${tag}</span>`).join("");
+        return `
+          <article class="feature-card">
+            <h3>${tool.name}</h3>
+            <p>${tool.desc}</p>
+            <a href="${tool.url}" data-recent-url="${tool.url}">Open tool →</a>
+            <div class="tool-tags">${tagsHtml}</div>
+          </article>
+        `;
+      }).join("");
+
+      recentGrid.querySelectorAll("a[data-recent-url]").forEach((link) => {
+        link.addEventListener("click", () => {
+          const url = link.getAttribute("data-recent-url");
+          const match = tools.find((item) => item.url === url);
+          if (match) {
+            recordRecentTool(match);
+          }
+        });
+      });
+    }
+
     function renderTools() {
       // Clear all sections
       document.querySelectorAll("[id$='-grid']").forEach(el => el.innerHTML = "");
@@ -910,7 +827,13 @@
         // Add to all matching sections
         tool.categories.forEach(category => {
           if (sections[category]) {
-            sections[category].appendChild(toolCard.cloneNode(true));
+            const clone = toolCard.cloneNode(true);
+            const link = clone.querySelector("a");
+            if (link) {
+              link.addEventListener("click", () => recordRecentTool(tool));
+            }
+
+            sections[category].appendChild(clone);
             totalDisplayed++;
           }
         });
@@ -991,6 +914,7 @@
     });
 
     // Initial render
+    renderRecentTools();
     renderTools();
 
     // ===== UTILITY TOOL EVENT HANDLERS =====

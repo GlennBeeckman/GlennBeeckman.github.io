@@ -1,4 +1,9 @@
 (function () {
+  function isHomePage() {
+    const path = window.location.pathname.toLowerCase();
+    return path.endsWith("/") || path.endsWith("/index.html") || /[\\/]index\.html$/.test(path);
+  }
+
   const links = document.querySelectorAll('a[href^="#"]');
   links.forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -24,7 +29,7 @@
     }
 
     try {
-      const response = await fetch("blog/index.html", { cache: "no-store" });
+      const response = await fetch("blog/index.html");
       if (!response.ok) {
         return;
       }
@@ -67,9 +72,75 @@
     }
   }
 
-  syncLatestPostCard();
+  if (isHomePage()) {
+    syncLatestPostCard();
+  }
+
+  function initPrivateLinkEasterEgg() {
+    if (!isHomePage()) {
+      return;
+    }
+
+    const brand = document.querySelector(".site-header .brand");
+    if (!brand) {
+      return;
+    }
+
+    const hiddenPath = "clinic-lab-pt-6f3a/index.html";
+    let clickCount = 0;
+    let clickTimer = null;
+    let keyBuffer = "";
+
+    function goToHiddenPage() {
+      const target = hiddenPath.startsWith("/") ? hiddenPath : "./" + hiddenPath;
+      window.location.href = target;
+    }
+
+    brand.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      clickCount += 1;
+
+      if (clickTimer) {
+        clearTimeout(clickTimer);
+      }
+
+      clickTimer = setTimeout(() => {
+        clickCount = 0;
+      }, 6000);
+
+      if (clickCount >= 5) {
+        clickCount = 0;
+        goToHiddenPage();
+      }
+    });
+
+    // Fallback trigger: type "ptlab" anywhere on the homepage.
+    document.addEventListener("keydown", (event) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+
+      const key = String(event.key || "").toLowerCase();
+      if (!/^[a-z]$/.test(key)) {
+        return;
+      }
+
+      keyBuffer = (keyBuffer + key).slice(-5);
+      if (keyBuffer === "ptlab") {
+        keyBuffer = "";
+        goToHiddenPage();
+      }
+    });
+  }
 
   function initSnailFollower() {
+    const snailEnabled = window.localStorage.getItem("snail-enabled") === "1" || window.__ENABLE_SNAIL__ === true;
+    if (!snailEnabled) {
+      return;
+    }
+
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
@@ -210,11 +281,9 @@
       requestAnimationFrame(tick);
     }
 
-    // Track eaten letters
-    const eatenLetters = new Map();
-
     requestAnimationFrame(tick);
   }
 
   initSnailFollower();
+  initPrivateLinkEasterEgg();
 })();

@@ -1,9 +1,34 @@
-// Admin authentication
-// IMPORTANT: Change these credentials before deploying to production!
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "changeme";
-
 const SESSION_KEY = "admin_session";
+const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+
+function isLocalAdminAllowed() {
+  const host = window.location.hostname;
+  return window.location.protocol === "file:" || host === "localhost" || host === "127.0.0.1";
+}
+
+function getSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.timestamp) {
+      return null;
+    }
+
+    if (Date.now() - parsed.timestamp > SESSION_TTL_MS) {
+      localStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+
+    return parsed;
+  } catch (error) {
+    localStorage.removeItem(SESSION_KEY);
+    return null;
+  }
+}
 
 function initLoginForm() {
   const loginForm = document.getElementById("login-form");
@@ -12,13 +37,22 @@ function initLoginForm() {
 
   if (!loginForm) return;
 
+  if (!isLocalAdminAllowed()) {
+    loginForm.style.display = "none";
+    if (errorMsg) {
+      errorMsg.textContent = "Admin login is disabled on deployed static hosting. Use local file:// or localhost for content generation.";
+      errorMsg.style.display = "block";
+    }
+    return;
+  }
+
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("admin-username").value;
-    const password = document.getElementById("admin-password").value;
+    const username = document.getElementById("admin-username").value.trim();
+    const password = document.getElementById("admin-password").value.trim();
 
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    if (username && password) {
       localStorage.setItem(SESSION_KEY, JSON.stringify({ user: username, timestamp: Date.now() }));
       loginForm.style.display = "none";
       if (successMsg) successMsg.style.display = "block";
@@ -28,19 +62,25 @@ function initLoginForm() {
         window.location.href = "dashboard.html";
       }, 500);
     } else {
-      errorMsg.textContent = "Invalid username or password";
-      errorMsg.style.display = "block";
+      if (errorMsg) {
+        errorMsg.textContent = "Enter both username and password to continue.";
+        errorMsg.style.display = "block";
+      }
     }
   });
 }
 
 function checkAuth() {
-  const session = localStorage.getItem(SESSION_KEY);
+  const session = getSession();
   const isDashboard = window.location.pathname.includes("dashboard");
-  const isLocal = window.location.protocol === "file:";
+  const localAllowed = isLocalAdminAllowed();
 
-  if (!session && isDashboard && !isLocal) {
-    // Only enforce auth redirect for http/https, not for local file:// access
+  if (isDashboard && !localAllowed) {
+    window.location.href = "index.html?blocked=1";
+    return;
+  }
+
+  if (!session && isDashboard) {
     window.location.href = "index.html";
   }
 }
